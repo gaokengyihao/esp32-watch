@@ -1,6 +1,6 @@
 # ESP32 手表 App（Flutter）
 
-配套固件工程：`E:\esp32\project\esp32\esp32s3_watch`（手表端蓝牙服务在 `main/ble_watch.c`）
+配套固件工程：`E:\esp32\project\esp32s3_watch`（手表端蓝牙服务在 `main/ble_watch.c`）
 
 ## 先跑起来看界面（不需要蓝牙、不需要装大工具链）
 
@@ -11,7 +11,7 @@
 flutter doctor
 
 # 2. 跑成网页（用 Chrome 看，最快，不需要 Visual Studio）
-cd E:\esp32\project\esp32\watch_app
+cd E:\esp32\project\watch_app
 flutter pub get
 flutter run -d chrome
 
