@@ -1,0 +1,45 @@
+{
+    // ==========================================================================
+    //  ESP-IDF 插件配置 —— 使用 EIM 安装的 ESP-IDF v6.1（E:\Espressif）
+    //  （VS Code 里的新版插件 v2.x 用前两项；Cursor 里的旧版插件 v1.x 用后面几项）
+    // ==========================================================================
+    "idf.eimIdfJsonPath": "E:/Espressif/tools/eim_idf.json",
+    "idf.currentSetup": "E:/Espressif/v6.1/esp-idf",
+
+    "idf.espIdfPath": "E:/Espressif/v6.1/esp-idf",
+    "idf.toolsPath": "E:/Espressif/tools",
+    "idf.pythonInstallPath": "E:/Espressif/tools/python/v6.1/venv/Scripts/python.exe",
+    "idf.pythonBinPath": "E:/Espressif/tools/python/v6.1/venv/Scripts/python.exe",
+    "idf.adapterTargetName": "esp32s3",
+    "idf.customExtraPaths": "E:/Espressif/tools/ccache/4.12.1/ccache-4.12.1-windows-x86_64;E:/Espressif/tools/cmake/4.0.3/bin;E:/Espressif/tools/dfu-util/0.11/dfu-util-0.11-win64;E:/Espressif/tools/esp-clang/esp-21.1.3_20260408/esp-clang/bin;E:/Espressif/tools/esp-clangd/esp-21.1.3_20260408/esp-clangd/bin;E:/Espressif/tools/esp-rom-elfs/20241011;E:/Espressif/tools/esp32ulp-elf/2.38_20240113/esp32ulp-elf/bin;E:/Espressif/tools/idf-exe/1.0.3;E:/Espressif/tools/ninja/1.12.1;E:/Espressif/tools/openocd-esp32/v0.12.0-esp32-20260703/openocd-esp32/bin;E:/Espressif/tools/riscv32-esp-elf/esp-15.2.0_20251204/riscv32-esp-elf/bin;E:/Espressif/tools/xtensa-esp-elf-gdb/17.1_20260402/xtensa-esp-elf-gdb/bin;E:/Espressif/tools/xtensa-esp-elf/esp-15.2.0_20251204/xtensa-esp-elf/bin;E:/Espressif/tools/python/v6.1/venv/Scripts",
+    "idf.customExtraVars": {
+        "IDF_PATH": "E:/Espressif/v6.1/esp-idf",
+        "IDF_TOOLS_PATH": "E:/Espressif/tools",
+        "IDF_PYTHON_ENV_PATH": "E:/Espressif/tools/python/v6.1/venv",
+        "ESP_ROM_ELF_DIR": "E:/Espressif/tools/esp-rom-elfs/20241011/",
+        "OPENOCD_SCRIPTS": "E:/Espressif/tools/openocd-esp32/v0.12.0-esp32-20260703/openocd-esp32/share/openocd/scripts",
+        "IDF_CCACHE_ENABLE": "1",
+        "ESP_CLANG_LIBS_PATH": "E:/Espressif/tools/esp-clang-libs/esp-21.1.3_20260408/esp-clang/lib"
+    },
+
+    // 串口和烧录参数（换串口号时改这里）
+    "idf.port": "COM8",
+    "idf.flashType": "UART",
+    "idf.flashBaudRate": "460800",
+    "idf.monitorBaudRate": "115200",
+    "idf.saveBeforeBuild": true,
+    "idf.enableCCache": true,
+
+    // ==========================================================================
+    //  编辑器体验优化
+    // ==========================================================================
+    // build 目录有几万个中间文件，隐藏掉，否则工程树和搜索都很卡
+    "files.exclude": {
+        "**/build": true
+    },
+    "search.exclude": {
+        "**/build": true,
+        "**/managed_components": true
+    },
+    "C_Cpp.default.compileCommands": "${workspaceFolder}/build/compile_commands.json"
+}

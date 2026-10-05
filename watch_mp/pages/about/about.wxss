@@ -1,0 +1,21 @@
+/* pages/about/about.wxss */
+.kv {
+  display: flex;
+  padding: 10rpx 0;
+  border-bottom: 1rpx solid #262e36;
+}
+.k {
+  width: 160rpx;
+  color: #00c8ff;
+}
+.v {
+  flex: 1;
+  color: #9aa4af;
+  font-size: 24rpx;
+}
+.tip {
+  color: #6c7681;
+  font-size: 22rpx;
+  margin: 0 30rpx 40rpx;
+  line-height: 1.7;
+}

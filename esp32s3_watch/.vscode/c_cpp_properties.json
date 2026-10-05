@@ -1,0 +1,21 @@
+{
+    // IntelliSense 配置：自动补全 / 跳转定义 / 报错提示
+    // 依赖 idf.py build 生成的 build/compile_commands.json（编译一次后就有了）
+    "version": 4,
+    "configurations": [
+        {
+            "name": "ESP32-S3",
+            "compileCommands": "${workspaceFolder}/build/compile_commands.json",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "gcc-x64",
+            "browse": {
+                "path": [
+                    "${workspaceFolder}/main",
+                    "${workspaceFolder}/managed_components"
+                ],
+                "limitSymbolsToIncludedHeaders": true
+            }
+        }
+    ]
+}

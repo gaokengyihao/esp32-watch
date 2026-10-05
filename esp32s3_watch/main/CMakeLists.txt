@@ -1,0 +1,11 @@
+idf_component_register(SRCS "ble_watch.c" "power_mgr.c" "watch_main.c"
+                            "display.c"
+                            "touch.c"
+                            "wifi_time.c"
+                            "ota_update.c"
+                            "ui.c"
+                            "pages.c"
+                            "page_manager.c"
+                            "button.c"
+                            "status_led.c"
+                       INCLUDE_DIRS ".")

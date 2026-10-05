@@ -1,0 +1,118 @@
+{
+    // ==========================================================================
+    //  VS Code 任务：编译 / 烧录 / 串口监视
+    //  用法：Ctrl+Shift+B = 编译；Ctrl+Shift+P → Run Task → 选其它任务
+    //  （即使 ESP-IDF 插件不工作，这些任务也能用）
+    // ==========================================================================
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "ESP-IDF: 编译",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-NoProfile",
+                "-ExecutionPolicy",
+                "Bypass",
+                "-Command",
+                ". 'E:\\Espressif\\tools\\Microsoft.v6.1.PowerShell_profile.ps1' | Out-Null; idf.py build"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared",
+                "clear": true
+            }
+        },
+        {
+            "label": "ESP-IDF: 烧录并监视串口",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-NoProfile",
+                "-ExecutionPolicy",
+                "Bypass",
+                "-Command",
+                ". 'E:\\Espressif\\tools\\Microsoft.v6.1.PowerShell_profile.ps1' | Out-Null; idf.py -p COM8 flash monitor"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "clear": true
+            }
+        },
+        {
+            "label": "ESP-IDF: 只烧录",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-NoProfile",
+                "-ExecutionPolicy",
+                "Bypass",
+                "-Command",
+                ". 'E:\\Espressif\\tools\\Microsoft.v6.1.PowerShell_profile.ps1' | Out-Null; idf.py -p COM8 flash"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared",
+                "clear": true
+            }
+        },
+        {
+            "label": "ESP-IDF: 图形化配置 (menuconfig)",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-NoProfile",
+                "-ExecutionPolicy",
+                "Bypass",
+                "-Command",
+                ". 'E:\\Espressif\\tools\\Microsoft.v6.1.PowerShell_profile.ps1' | Out-Null; idf.py menuconfig"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            }
+        },
+        {
+            "label": "ESP-IDF: 彻底清理 (fullclean)",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-NoProfile",
+                "-ExecutionPolicy",
+                "Bypass",
+                "-Command",
+                ". 'E:\\Espressif\\tools\\Microsoft.v6.1.PowerShell_profile.ps1' | Out-Null; idf.py fullclean"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared",
+                "clear": true
+            }
+        }
+    ]
+}

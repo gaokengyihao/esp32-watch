@@ -1,0 +1,55 @@
+/* app.wxss —— 全局样式（深色，和手表界面一个风格） */
+page {
+  background: #101418;
+  color: #e8eaed;
+  font-size: 28rpx;
+}
+
+.card {
+  background: #1b2026;
+  border-radius: 24rpx;
+  padding: 28rpx;
+  margin: 20rpx;
+}
+
+.card-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.label {
+  color: #9aa4af;
+  font-size: 26rpx;
+}
+
+.value {
+  font-size: 40rpx;
+  font-weight: 700;
+}
+
+.btn {
+  background: #00c8ff;
+  color: #04222c;
+  border-radius: 20rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  margin: 20rpx;
+}
+
+.btn-ghost {
+  background: #2a323b;
+  color: #e8eaed;
+}
+
+.log {
+  background: #0c0f13;
+  border-radius: 16rpx;
+  padding: 20rpx;
+  height: 300rpx;
+  font-size: 22rpx;
+  color: #8fa0b0;
+  overflow: scroll;
+  white-space: pre-wrap;
+  line-height: 1.6;
+}

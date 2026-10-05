@@ -1,0 +1,28 @@
+{
+  "pages": [
+    "pages/data/data",
+    "pages/update/update",
+    "pages/about/about"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#101418",
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "ESP32 手表",
+    "backgroundColor": "#101418",
+    "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "color": "#8a94a0",
+    "selectedColor": "#00c8ff",
+    "backgroundColor": "#151a20",
+    "borderStyle": "black",
+    "list": [
+      { "pagePath": "pages/data/data", "text": "数据" },
+      { "pagePath": "pages/update/update", "text": "升级" },
+      { "pagePath": "pages/about/about", "text": "关于" }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

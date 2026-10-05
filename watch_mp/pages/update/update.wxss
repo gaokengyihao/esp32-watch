@@ -1,0 +1,47 @@
+/* pages/update/update.wxss —— 升级页样式 */
+.center {
+  text-align: center;
+  padding: 60rpx 30rpx;
+}
+.ver {
+  font-size: 76rpx;
+  font-weight: 700;
+  margin: 16rpx 0 30rpx;
+}
+.ok {
+  color: #39d98a;
+  font-size: 28rpx;
+}
+.new {
+  color: #00c8ff;
+  font-size: 32rpx;
+  font-weight: 600;
+  margin-bottom: 30rpx;
+}
+.dim {
+  color: #8a94a0;
+  font-size: 26rpx;
+}
+.err {
+  color: #ff8080;
+  font-size: 26rpx;
+}
+.btn {
+  background: #00c8ff;
+  color: #04222c;
+  border-radius: 20rpx;
+  font-size: 32rpx;
+  font-weight: 600;
+  margin-top: 10rpx;
+}
+.btn.ghost {
+  background: #2a323b;
+  color: #e8eaed;
+  font-size: 28rpx;
+}
+.tip {
+  color: #6c7681;
+  font-size: 22rpx;
+  margin: 0 30rpx 40rpx;
+  line-height: 1.7;
+}

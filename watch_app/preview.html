@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ESP32 手表 App —— 界面预览</title>
+<style>
+  :root{
+    --bg:#101418; --card:#1b2026; --card2:#232a32; --fg:#e8eaed;
+    --dim:#9aa4af; --accent:#00c8ff; --ok:#39d98a; --warn:#ffb020;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  body{margin:0;background:#05070a;color:var(--fg);
+       font-family:-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;
+       display:flex;justify-content:center;align-items:center;min-height:100vh}
+  .phone{width:390px;height:780px;background:var(--bg);border-radius:28px;
+         overflow:hidden;display:flex;flex-direction:column;
+         box-shadow:0 20px 60px #000a;border:1px solid #2a323b}
+  .topbar{display:flex;align-items:center;justify-content:space-between;
+          padding:14px 16px;background:#151a20}
+  .topbar h1{font-size:17px;margin:0}
+  .mock{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--dim)}
+  .switch{width:38px;height:20px;border-radius:10px;background:var(--accent);
+          position:relative;cursor:pointer}
+  .switch::after{content:"";position:absolute;top:2px;left:20px;width:16px;height:16px;
+                 border-radius:50%;background:#fff}
+  .switch.off{background:#3a444d}
+  .switch.off::after{left:2px}
+  .body{flex:1;overflow-y:auto;padding:12px}
+  .card{background:var(--card);border-radius:14px;padding:14px;margin-bottom:10px;
+        display:flex;align-items:center;gap:14px}
+  .card .ico{font-size:24px;width:32px;text-align:center}
+  .card .txt{flex:1}
+  .card .t{font-size:13px;color:var(--dim)}
+  .card .v{font-size:20px;font-weight:700;margin-top:2px}
+  .hint{font-size:11px;color:#6c7681;margin-top:2px}
+  .btn{width:100%;padding:13px;border:0;border-radius:12px;font-size:15px;font-weight:600;
+       background:var(--accent);color:#04222c;margin-top:6px}
+  .btn.ghost{background:#2a323b;color:var(--fg)}
+  .btn:disabled{opacity:.45}
+  .row{display:flex;gap:8px}
+  input[type=text]{width:100%;padding:12px;border-radius:12px;border:1px solid #333d47;
+                   background:#151a20;color:var(--fg);font-size:13px;margin-top:6px}
+  .bar{height:8px;background:#2a323b;border-radius:4px;overflow:hidden;margin:14px 0 6px}
+  .bar>i{display:block;height:100%;width:0;background:var(--accent);transition:width .2s}
+  .msg{text-align:center;font-size:13px;color:var(--dim);min-height:20px}
+  .log{background:#0c0f13;border-radius:10px;padding:10px;font-size:11px;color:#8fa0b0;
+       height:130px;overflow-y:auto;white-space:pre-wrap;line-height:1.5}
+  table{width:100%;border-collapse:collapse;font-size:12px}
+  td{padding:5px 0;border-bottom:1px solid #262e36;color:var(--dim)}
+  td:first-child{color:var(--accent);font-family:monospace;width:74px}
+  .nav{display:flex;background:#151a20;padding:8px 0 10px}
+  .nav div{flex:1;text-align:center;font-size:11px;color:var(--dim);cursor:pointer}
+  .nav div.on{color:var(--accent)}
+  .nav .i{display:block;font-size:19px;margin-bottom:2px}
+  .page{display:none} .page.on{display:block}
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="topbar">
+    <h1 id="title">手表数据</h1>
+    <div class="mock">模拟 <div class="switch" id="sw" onclick="toggleMock()"></div></div>
+  </div>
+
+  <div class="body">
+    <!-- 数据页 -->
+    <div class="page on" id="p0">
+      <div class="card"><div class="ico">🚶</div><div class="txt">
+        <div class="t">步数</div><div class="v" id="steps">1250</div>
+        <div class="hint">以后接 MPU6050 就是真实步数</div></div></div>
+      <div class="card"><div class="ico">🔋</div><div class="txt">
+        <div class="t">电量</div><div class="v">87%</div>
+        <div class="hint">要加电池分压到 ADC（暂假数据）</div></div></div>
+      <div class="card"><div class="ico">🧠</div><div class="txt">
+        <div class="t">固件版本</div><div class="v" id="ver">1.6</div>
+        <div class="hint">手表当前跑的版本（真机是蓝牙读的）</div></div></div>
+      <div class="card"><div class="ico">⏱️</div><div class="txt">
+        <div class="t">运行时间</div><div class="v" id="up">--</div></div></div>
+      <button class="btn" onclick="connect()">连接手表</button>
+      <button class="btn ghost" onclick="log_add('已断开')">断开</button>
+      <div class="hint" style="margin:14px 0 6px">日志</div>
+      <div class="log" id="log">（这是网页预览版，数据是假的）\n真机版：Flutter + flutter_blue_plus，连 ESP32-Watch</div>
+    </div>
+
+    <!-- 升级页 -->
+    <div class="page" id="p1">
+      <div class="card"><div class="ico">🧠</div><div class="txt">
+        <div class="t">手表版本</div><div class="v" id="ver2">1.6</div></div></div>
+      <div class="hint">固件文件路径</div>
+      <input type="text" value="D:\esp32\esp32s3_watch\build\esp32s3_watch.bin">
+      <button class="btn" id="upbtn" onclick="ota()">开始升级（蓝牙传输）</button>
+      <div class="bar"><i id="prog"></i></div>
+      <div class="msg" id="msg">等待开始</div>
+      <div class="card" style="display:block;font-size:12px;line-height:1.7;color:var(--dim)">
+        · 固件先写手表的"另一块"分区，传一半断了也不影响使用<br>
+        · 传完自动校验+重启进新版本（A/B 分区 + 回滚保护）<br>
+        · 正式产品可加：固件签名、云端版本检查<br>
+        · 手机联网自动查新版本 → "手机上更新手表"完整链路
+      </div>
+    </div>
+
+    <!-- 关于页 -->
+    <div class="page" id="p2">
+      <div class="card" style="display:block">
+        <div style="font-size:17px;font-weight:700">ESP32-S3 智能手表</div>
+        <div style="font-size:12px;color:var(--dim);margin-top:6px;line-height:1.7">
+          屏幕 + LVGL v9 + 触摸手势 + WiFi 对时 + 低功耗<br>+ A/B 双分区 OTA + 蓝牙（BLE）
+        </div>
+      </div>
+      <div class="card" style="display:block">
+        <div style="font-weight:700;margin-bottom:8px">蓝牙服务（固件 main/ble_watch.c）</div>
+        <table>
+          <tr><td>0xFF00</td><td>服务</td></tr>
+          <tr><td>0xFF01</td><td>读 — 固件版本</td></tr>
+          <tr><td>0xFF02</td><td>读+通知 — 状态数据</td></tr>
+          <tr><td>0xFF03</td><td>写 — 命令</td></tr>
+          <tr><td>0xFF04</td><td>写 — 固件数据（OTA）</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav">
+    <div class="on" onclick="tab(0)"><span class="i">⌚</span>数据</div>
+    <div onclick="tab(1)"><span class="i">⬆️</span>升级</div>
+    <div onclick="tab(2)"><span class="i">ℹ️</span>关于</div>
+  </div>
+</div>
+
+<script>
+let mock = true, t = 0;
+const $ = id => document.getElementById(id);
+const titles = ['手表数据','蓝牙升级','关于'];
+
+function tab(i){
+  for(let k=0;k<3;k++){
+    $('p'+k).classList.toggle('on', k===i);
+    document.querySelectorAll('.nav div')[k].classList.toggle('on', k===i);
+  }
+  $('title').textContent = titles[i];
+}
+function toggleMock(){
+  mock = !mock;
+  $('sw').classList.toggle('off', !mock);
+  log_add(mock ? '已切到模拟模式（假数据）' : '模拟模式关闭：需要蓝牙适配器才能连真手表');
+}
+function log_add(s){
+  $('log').textContent = s + '\n' + $('log').textContent;
+}
+function connect(){
+  log_add('扫描手表（先点一下手表屏幕叫醒它）...');
+  setTimeout(()=>{ $('ver').textContent='1.6'; $('ver2').textContent='1.6';
+    log_add('已连接 ESP32-Watch，读到的版本：1.6'); }, 900);
+}
+function ota(){
+  $('upbtn').disabled = true; $('msg').textContent = '传输中...';
+  let p = 0;
+  const timer = setInterval(()=>{
+    p += 3; $('prog').style.width = p + '%';
+    if(p % 15 === 0) log_add('ota=' + p + '%');
+    if(p >= 100){
+      clearInterval(timer);
+      $('msg').textContent = '传完，等手表校验+重启...';
+      setTimeout(()=>{ $('msg').textContent = '升级完成 ✓（真机会自动重启）';
+        $('upbtn').disabled = false; }, 1200);
+    }
+  }, 120);
+}
+setInterval(()=>{ if(!mock) return; t += 2;
+  $('steps').textContent = 1250 + t * 3;
+  $('up').textContent = t + 's';
+}, 2000);
+log_add('网页预览版：界面和 Flutter 真机版一致，数据是假的');
+</script>
+</body>
+</html>

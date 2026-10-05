@@ -1,0 +1,33 @@
+{
+    // ==========================================================================
+    //  ESP-IDF 工作区（Keil 风格：左边能同时看到"我的工程"和"库源码"）
+    //  用法：双击本文件打开，或在 VS Code 里 文件→打开工作区
+    // ==========================================================================
+    "folders": [
+        {
+            "name": "① 我的手表工程（在这里写代码）",
+            "path": "E:\\esp32\\project\\esp32\\esp32s3_watch"
+        },
+        {
+            "name": "② ESP-IDF 库源码（只读参考，Ctrl+P 搜索查看）",
+            "path": "E:\\Espressif\\v6.1\\esp-idf\\components"
+        }
+    ],
+    "settings": {
+        // build 目录到处都有，隐藏掉避免卡顿
+        "files.exclude": {
+            "**/build": true,
+            "**/.git": true
+        },
+        // 搜索时跳过测试/示例，避免搜出几万条无关结果
+        "search.exclude": {
+            "**/build": true,
+            "**/test": true,
+            "**/tests": true
+        },
+        // 不监视库目录的文件变化（库不会改，监视它浪费资源）
+        "files.watcherExclude": {
+            "**/components/**": true
+        }
+    }
+}

@@ -1,0 +1,41 @@
+# ============================================================================
+#  ESP32-S3 智能手表 —— git 忽略清单
+#  原则：编译产物/依赖不进仓库（可重新生成）；参考资料太大各自保存；密码不提交
+# ============================================================================
+
+# ---- 编译产物 / 依赖（可重新生成）----
+build/
+managed_components/
+sdkconfig
+sdkconfig.old
+*.bin
+*.elf
+*.map
+
+# ---- 运行日志 ----
+*.log
+serial_COM3_*.log
+
+# ---- 参考资料（体积大，两类机器各自留一份即可）----
+ESP32-S3资料/
+OV-Watch-参考/
+TFT屏资料/
+esp32s3_project/
+
+# ---- Flutter 构建产物 ----
+watch_app/build/
+watch_app/.dart_tool/
+watch_app/.idea/
+watch_app/.flutter-plugins
+watch_app/.flutter-plugins-dependencies
+watch_app/windows/flutter/ephemeral/
+watch_app/android/.gradle/
+watch_app/ios/Pods/
+watch_app/ios/.symlinks/
+watch_app/ios/Flutter/ephemeral/
+
+# ---- 系统 / 编辑器杂项 ----
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
