@@ -7,22 +7,24 @@
 
 | 目录 | 内容 |
 |---|---|
-| **esp32s3_watch/** | 手表固件（ESP-IDF 工程）★ 主要开发在这里 |
-| | → 必读：`项目说明.md`（学习路线 / 接线 / 踩坑记录 / 蓝牙协议 / 面试讲点） |
-| **watch_mp/** | 手机端：微信小程序（数据 / 升级 / 关于） |
-| | → 说明：`README.md`（导入方式 / 蓝牙 UUID / 发布流程） |
-| watch_app/ | Flutter 调试工具（可选） |
-| ota_server/ | WiFi-OTA 的 HTTP 服务器目录（version.txt + 固件，bin 不进仓库） |
-| fw_release/ | 发布的固件存档（自动生成） |
-| drivers/ | 板子 USB 驱动 |
-| esp32s3_test/ | 早期练手工程 |
+| **手表项目/** | 手表整套（AI 协助开发） |
+| ├ `esp32s3_watch/` | 手表固件（ESP-IDF 工程）★ 核心；必读 `项目说明.md` |
+| ├ `watch_mp/` | 手机端微信小程序（数据 / 升级 / 关于） |
+| ├ `watch_app/` | Flutter 调试工具（可选） |
+| ├ `ota_server/` | WiFi / 小程序升级用的 HTTP 服务器目录 |
+| └ `fw_release/` | 固件版本存档（发布时自动更新） |
+| 我的练习/ | 自己写的练习工程（`esp32s3_project`） |
+| 测试/ | 测试工程（`esp32s3_test`） |
+| 资料/ | 芯片 / 屏幕资料（`ESP32-S3资料`、`TFT屏资料`） |
+| 参考例程/ | OV-Watch 开源参考项目 + `项目网址.txt` |
+| 工具/ | 板子 USB 驱动（`drivers/usb_jtag_driver`，备用） |
 
 ## 换机器开发注意
 
 1. `git clone` 本仓库（**不含**：编译产物、managed_components、sdkconfig、参考资料大文件）
 2. 第一次编译：`idf.py build` 会重新生成 `sdkconfig` 并自动下载组件
 3. WiFi 配置（对时/OTA 用）：`idf.py menuconfig -> Watch 手表配置`（不提交到仓库）
-4. **AI 协作上下文**：开工前让 AI 先读 `esp32s3_watch/项目说明.md`（所有进度和踩坑都在里面）
+4. **AI 协作上下文**：开工前让 AI 先读 `手表项目/esp32s3_watch/项目说明.md`
 
 ## 当前版本
 

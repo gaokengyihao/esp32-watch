@@ -6,7 +6,7 @@
     "folders": [
         {
             "name": "① 我的手表工程（在这里写代码）",
-            "path": "E:\\esp32\\project\\esp32s3_watch"
+            "path": "E:\\esp32\\project\\手表项目\\esp32s3_watch"
         },
         {
             "name": "② ESP-IDF 库源码（只读参考，Ctrl+P 搜索查看）",

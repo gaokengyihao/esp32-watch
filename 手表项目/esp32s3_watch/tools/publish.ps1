@@ -1,11 +1,11 @@
-﻿# publish.ps1 —— 编译 + 发布固件（旧的自动删除）
+# publish.ps1 —— 编译 + 发布固件（旧的自动删除）
 #
 # 用法：双击 tools\publish.bat（推荐），或在 PowerShell 里运行本脚本
 # 做完三件事：
 #   1) idf.py build
-#   2) 把 build\esp32s3_watch.bin 复制到 E:\esp32\project\fw_release\esp32s3_watch_v<版本>.bin
+#   2) 把 build\esp32s3_watch.bin 复制到 E:\esp32\project\手表项目\fw_release\esp32s3_watch_v<版本>.bin
 #      （发布目录里的旧 .bin 自动删掉）
-#   3) 顺便同步 WiFi-OTA 的服务器目录（E:\esp32\project\ota_server，version.txt 一起更新）
+#   3) 顺便同步 WiFi-OTA 的服务器目录（E:\esp32\project\手表项目\ota_server，version.txt 一起更新）
 
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot        # 项目根目录（tools 的上一级）
