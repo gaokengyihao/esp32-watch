@@ -21,6 +21,7 @@ ESP32-S3资料/
 OV-Watch-参考/
 TFT屏资料/
 esp32s3_project/
+my_project/
 
 # ---- Flutter 构建产物（任意层级）----
 **/watch_app/build/
