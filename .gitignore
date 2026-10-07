@@ -30,8 +30,8 @@
 
 # ---- 固件发布二进制（每次编译都变、体积大、含 WiFi 密码明文，不进 Git） ----
 # 发布包用 U 盘/网盘拷贝，或以后用 GitHub Releases 分发
-/fw_release/*.bin
-/ota_server/*.bin
+**/fw_release/*.bin
+**/ota_server/*.bin
 
 # ---- 微信开发者工具个人配置 ----
 **/project.private.config.json

@@ -1,6 +1,6 @@
 # ESP32 手表小程序（微信）
 
-配套固件工程：`D:\esp32\esp32s3_watch`（手表端蓝牙服务在 `main/ble_watch.c`）
+配套固件工程：`D:\esp32\watch\esp32s3_watch`（手表端蓝牙服务在 `main/ble_watch.c`）
 
 ## 你只需要做两步
 
@@ -9,7 +9,7 @@
 2. **下载微信开发者工具（Windows 版）**
    https://developers.weixin.qq.com/miniprogram/dev/devtools/download.html
 
-然后：开发者工具 -> 导入项目 -> 目录选 `D:\esp32\watch_mp` -> AppID 填你的（或点"测试号"）
+然后：开发者工具 -> 导入项目 -> 目录选 `D:\esp32\watch\watch_mp` -> AppID 填你的（或点"测试号"）
 -> 编译，就能在模拟器里看到界面；点右上角**"预览"**生成二维码，**手机微信扫码就能用** ✓
 
 ## 三个页面
@@ -30,8 +30,8 @@
               -> 自动下载固件 -> 蓝牙传手表 -> 手表重启 ✓
 ```
 
-固件来源：电脑上的 HTTP 服务器目录 `D:\esp32\ota_server`
-（由 `D:\esp32\esp32s3_watch\tools\publish.bat` 自动同步 version.txt + bin）
+固件来源：电脑上的 HTTP 服务器目录 `D:\esp32\watch\ota_server`
+（由 `D:\esp32\watch\esp32s3_watch\tools\publish.bat` 自动同步 version.txt + bin）
 地址写在 `utils/fw.js` 的 `SERVER`（默认 `http://192.168.1.174:8000`，IP 变了要改）
 
 ### 让手机/工具能访问网络（关键设置）
@@ -45,8 +45,8 @@
 ### 电脑端准备（每次发布固件）
 
 ```powershell
-① 双击 D:\esp32\esp32s3_watch\tools\publish.bat     # 编译 + 发布 + 同步 version.txt
-② cd D:\esp32\ota_server ; python -m http.server 8000   # 起服务器（第一次防火墙点"允许"）
+① 双击 D:\esp32\watch\esp32s3_watch\tools\publish.bat     # 编译 + 发布 + 同步 version.txt
+② cd D:\esp32\watch\ota_server ; python -m http.server 8000   # 起服务器（第一次防火墙点"允许"）
 ③ 手机和电脑连同一个 WiFi
 ```
 
@@ -67,10 +67,10 @@ um.onUpdateReady(() => {
 
 ## 固件发布 + 自动检查新固件（已实现）
 
-电脑上双击 **`D:\esp32\esp32s3_watch\tools\publish.bat`**：
+电脑上双击 **`D:\esp32\watch\esp32s3_watch\tools\publish.bat`**：
 ```
 · idf.py build 编译
-· 自动复制到 D:\esp32\fw_release\esp32s3_watch_v<版本号>.bin（旧的 .bin 删掉）
+· 自动复制到 D:\esp32\watch\fw_release\esp32s3_watch_v<版本号>.bin（旧的 .bin 删掉）
 · 顺便同步 WiFi-OTA 服务器目录（version.txt = 新版本）
 ```
 

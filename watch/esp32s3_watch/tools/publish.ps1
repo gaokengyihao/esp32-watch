@@ -1,11 +1,11 @@
-﻿# publish.ps1 —— 编译 + 发布固件（旧的自动删除）
+# publish.ps1 —— 编译 + 发布固件（旧的自动删除）
 #
 # 用法：双击 tools\publish.bat（推荐），或在 PowerShell 里运行本脚本
 # 做完三件事：
 #   1) idf.py build
-#   2) 把 build\esp32s3_watch.bin 复制到 D:\esp32\fw_release\esp32s3_watch_v<版本>.bin
+#   2) 把 build\esp32s3_watch.bin 复制到 D:\esp32\watch\fw_release\esp32s3_watch_v<版本>.bin
 #      （发布目录里的旧 .bin 自动删掉）
-#   3) 顺便同步 WiFi-OTA 的服务器目录（D:\esp32\ota_server，version.txt 一起更新）
+#   3) 顺便同步 WiFi-OTA 的服务器目录（D:\esp32\watch\ota_server，version.txt 一起更新）
 
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot        # 项目根目录（tools 的上一级）
@@ -35,7 +35,7 @@ $buildOut | Select-String -Pattern 'error|FAILED|binary size|Project build compl
 if ($LASTEXITCODE -ne 0) { throw '编译失败，先修错误再发布' }
 
 # 3) 发布到指定目录（旧 .bin 自动删除）
-$rel = 'D:\esp32\fw_release'
+$rel = 'D:\esp32\watch\fw_release'
 New-Item -ItemType Directory -Force $rel | Out-Null
 Remove-Item "$rel\*.bin" -Force -ErrorAction SilentlyContinue
 $dst = "$rel\esp32s3_watch_v$ver.bin"
@@ -43,7 +43,7 @@ Copy-Item 'build\esp32s3_watch.bin' $dst -Force
 Write-Host "已发布: $dst" -ForegroundColor Green
 
 # 4) 同步 WiFi-OTA 服务器目录（手表自己联网升级用的那套）
-$srv = 'D:\esp32\ota_server'
+$srv = 'D:\esp32\watch\ota_server'
 if (Test-Path $srv) {
     Copy-Item 'build\esp32s3_watch.bin' "$srv\esp32s3_watch.bin" -Force
     Set-Content "$srv\version.txt" -Value $ver -NoNewline -Encoding ascii

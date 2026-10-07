@@ -2,7 +2,7 @@
  * utils/fw.js —— 固件来源（最新版本号 + 固件文件）
  *
  * 两种模式，改下面这行就能切：
- *   MODE = 'http'   开发阶段：电脑上的 HTTP 服务器（publish.bat 自动同步到 D:\esp32\ota_server）
+ *   MODE = 'http'   开发阶段：电脑上的 HTTP 服务器（publish.bat 自动同步到 D:\esp32\watch\ota_server）
  *   MODE = 'cloud'  正式模式：微信云开发（固件放云存储，不需要域名/备案，手机 4G 也能用）
  *
  * 云开发模式需要两步准备：

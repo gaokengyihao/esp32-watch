@@ -68,7 +68,7 @@ class BleService extends ChangeNotifier {
   // ---- OTA ----
   double otaProgress = 0;
   String otaMessage = '';
-  String firmwarePath = 'D:\\esp32\\esp32s3_watch\\build\\esp32s3_watch.bin';
+  String firmwarePath = 'D:\\esp32\\watch\\esp32s3_watch\\build\\esp32s3_watch.bin';
 
   BluetoothDevice? _dev;
   BluetoothCharacteristic? _cVersion;
