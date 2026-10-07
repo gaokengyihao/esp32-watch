@@ -1,0 +1,20 @@
+name: watch_app
+description: ESP32-S3 智能手表 App —— 先跑电脑版调试（数据/版本/蓝牙升级），后续出 Android/iOS
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  # 蓝牙库（支持 Android/iOS/macOS/Windows）
+  flutter_blue_plus: ^1.32.0
+  cupertino_icons: ^1.0.6
+
+dev_dependencies:
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true

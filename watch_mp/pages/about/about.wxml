@@ -1,0 +1,27 @@
+<!-- pages/about/about.wxml —— 关于页 -->
+<view class="card">
+  <view style="font-size:34rpx;font-weight:700">ESP32-S3 智能手表</view>
+  <view class="label" style="margin-top:16rpx;line-height:1.8">
+    屏幕 + LVGL v9 + 触摸手势 + WiFi 对时 + 低功耗<br/>
+    A/B 双分区 OTA + 蓝牙（BLE）传固件
+  </view>
+</view>
+
+<view class="card">
+  <view class="label" style="margin-bottom:16rpx">蓝牙服务（固件 main/ble_watch.c）</view>
+  <view class="kv"><text class="k">0xFF00</text><text class="v">服务</text></view>
+  <view class="kv"><text class="k">0xFF01</text><text class="v">读 — 固件版本</text></view>
+  <view class="kv"><text class="k">0xFF02</text><text class="v">读+通知 — 状态数据</text></view>
+  <view class="kv"><text class="k">0xFF03</text><text class="v">写 — 命令</text></view>
+  <view class="kv"><text class="k">0xFF04</text><text class="v">写 — 固件数据（OTA）</text></view>
+</view>
+
+<view class="card">
+  <view class="kv"><text class="k">小程序</text><text class="v">版本 {{version}}</text></view>
+  <button class="btn" style="margin:20rpx 0 0" bindtap="checkUpdate">关于更新机制</button>
+</view>
+
+<view class="tip">
+  待做：步数/睡眠（MPU6050）、心率（需加 MAX30102 传感器）、
+  电量（电池分压到 ADC）、云端固件版本检查（微信云开发）
+</view>

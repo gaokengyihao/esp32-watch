@@ -1,0 +1,45 @@
+{
+    // ==========================================================================
+    //  ESP-IDF 插件配置 —— 使用你电脑上已装的 IDF v6.1-beta1
+    //  （VS Code 里的新版插件 v2.x 用前两项；Cursor 里的旧版插件 v1.x 用后面几项）
+    // ==========================================================================
+    "idf.eimIdfJsonPath": "C:/Espressif/tools/eim_idf.json",
+    "idf.currentSetup": "C:\\esp\\v6.1-beta1\\esp-idf",
+
+    "idf.espIdfPath": "C:/esp/v6.1-beta1/esp-idf",
+    "idf.toolsPath": "C:/Espressif/tools",
+    "idf.pythonInstallPath": "C:/Espressif/tools/python/v6.1-beta1/venv/Scripts/python.exe",
+    "idf.pythonBinPath": "C:/Espressif/tools/python/v6.1-beta1/venv/Scripts/python.exe",
+    "idf.adapterTargetName": "esp32s3",
+    "idf.customExtraPaths": "C:/Espressif/tools/ccache/4.12.1/ccache-4.12.1-windows-x86_64;C:/Espressif/tools/cmake/4.0.3/bin;C:/Espressif/tools/dfu-util/0.11/dfu-util-0.11-win64;C:/Espressif/tools/esp-clang/esp-21.1.3_20260408/esp-clang/bin;C:/Espressif/tools/esp-clangd/esp-21.1.3_20260408/esp-clangd/bin;C:/Espressif/tools/esp-rom-elfs/20241011/;C:/Espressif/tools/esp32ulp-elf/2.38_20240113/esp32ulp-elf/bin;C:/Espressif/tools/esp32ulp-elf/2.38_20240113/esp32ulp-elf/esp32ulp-elf/bin;C:/Espressif/tools/idf-exe/1.0.3/;C:/Espressif/tools/ninja/1.12.1/;C:/Espressif/tools/openocd-esp32/v0.12.0-esp32-20260424/openocd-esp32/bin;C:/Espressif/tools/riscv32-esp-elf-gdb/17.1_20260402/riscv32-esp-elf-gdb/bin;C:/Espressif/tools/riscv32-esp-elf/esp-15.2.0_20251204/riscv32-esp-elf/bin;C:/Espressif/tools/riscv32-esp-elf/esp-15.2.0_20251204/riscv32-esp-elf/riscv32-esp-elf/bin;C:/Espressif/tools/xtensa-esp-elf-gdb/17.1_20260402/xtensa-esp-elf-gdb/bin;C:/Espressif/tools/xtensa-esp-elf/esp-15.2.0_20251204/xtensa-esp-elf/bin;C:/Espressif/tools/xtensa-esp-elf/esp-15.2.0_20251204/xtensa-esp-elf/xtensa-esp-elf/bin;C:/Espressif/tools/python/v6.1-beta1/venv/Scripts",
+    "idf.customExtraVars": {
+        "IDF_PATH": "C:/esp/v6.1-beta1/esp-idf",
+        "IDF_TOOLS_PATH": "C:/Espressif/tools",
+        "IDF_PYTHON_ENV_PATH": "C:/Espressif/tools/python/v6.1-beta1/venv",
+        "ESP_ROM_ELF_DIR": "C:/Espressif/tools/esp-rom-elfs/20241011/",
+        "OPENOCD_SCRIPTS": "C:/Espressif/tools/openocd-esp32/v0.12.0-esp32-20260424/openocd-esp32/share/openocd/scripts",
+        "IDF_CCACHE_ENABLE": "1",
+        "ESP_CLANG_LIBS_PATH": "C:/Espressif/tools/esp-clang-libs/esp-21.1.3_20260408/esp-clang/lib"
+    },
+
+    // 串口和烧录参数（换串口号时改这里）
+    "idf.port": "COM8",
+    "idf.flashType": "UART",
+    "idf.flashBaudRate": "460800",
+    "idf.monitorBaudRate": "115200",
+    "idf.saveBeforeBuild": true,
+    "idf.enableCCache": true,
+
+    // ==========================================================================
+    //  编辑器体验优化
+    // ==========================================================================
+    // build 目录有几万个中间文件，隐藏掉，否则工程树和搜索都很卡
+    "files.exclude": {
+        "**/build": true
+    },
+    "search.exclude": {
+        "**/build": true,
+        "**/managed_components": true
+    },
+    "C_Cpp.default.compileCommands": "${workspaceFolder}/build/compile_commands.json"
+}

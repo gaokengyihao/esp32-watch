@@ -1,0 +1,39 @@
+<!-- pages/data/data.wxml —— 数据页 -->
+<view class="card card-row">
+  <text class="label">🚶 步数</text>
+  <text class="value">{{status.steps}}</text>
+</view>
+
+<view class="card card-row">
+  <text class="label">🔋 电量</text>
+  <text class="value">{{status.battery}}</text>
+</view>
+
+<view class="card card-row">
+  <text class="label">🧠 固件版本</text>
+  <text class="value">{{status.firmware}}</text>
+</view>
+
+<view class="card card-row">
+  <text class="label">⏱ 运行时间</text>
+  <text class="value">{{status.uptime}}</text>
+</view>
+
+<button class="btn" bindtap="connect" disabled="{{busy}}">
+  {{connected ? '已连接（点我重新连）' : '连接手表'}}
+</button>
+<button class="btn btn-ghost" bindtap="disconnect" disabled="{{!connected}}">断开</button>
+
+<!-- 连接日志默认收起（用户不用看；调试出问题时点开截图给我） -->
+<view class="logline" bindtap="toggleLog">
+  连接日志（调试用）{{showLog ? ' ▲' : ' ▼'}}
+</view>
+<view wx:if="{{showLog}}" class="card" style="margin-top:0">
+  <scroll-view class="log" scroll-y>
+    <text>{{log}}</text>
+  </scroll-view>
+</view>
+
+<view class="tip">
+  提示：手表睡着时不广播，先点一下屏幕叫醒它再点"连接手表"
+</view>

@@ -1,0 +1,14 @@
+# 分区表：16MB Flash，OTA 用 A/B 双槽（程序自己给自己升级）
+#
+# 为什么要有 otadata：它记录"下次该从 ota_0 还是 ota_1 启动"。
+# 升级时：把新固件写进"另一块"槽 -> 改 otadata -> 重启就进新固件了。
+# （写坏/写一半断电都不怕：还在跑的那块槽是完好的）
+#
+# 槽大小 3MB：加了蓝牙(BLE)协议栈以后固件会到 2MB 左右，2MB 的槽就不够了
+#
+# Name,     Type, SubType, Offset,   Size
+nvs,        data, nvs,     0x9000,   0x6000,
+otadata,    data, ota,     0xf000,   0x2000,
+phy_init,   data, phy,     0x11000,  0x1000,
+ota_0,      app,  ota_0,   0x20000,  0x300000,
+ota_1,      app,  ota_1,   0x320000, 0x300000,

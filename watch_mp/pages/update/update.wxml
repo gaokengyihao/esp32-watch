@@ -1,0 +1,45 @@
+<!-- pages/update/update.wxml —— 升级页（只有：版本 / 结果 / 按钮） -->
+
+<!-- 状态区 -->
+<view class="card center">
+  <view class="label">手表当前版本</view>
+  <view class="ver">{{watchVer}}</view>
+
+  <!-- 已是最新 -->
+  <view wx:if="{{state === 'latest'}}" class="ok">✓ 已是最新版本</view>
+
+  <!-- 发现新版本 -->
+  <block wx:elif="{{state === 'found'}}">
+    <view class="new">🆕 发现新版本 v{{cloudVer}}</view>
+    <button class="btn" bindtap="doUpdate">立即升级到 v{{cloudVer}}</button>
+  </block>
+
+  <!-- 各种进行中 / 提示 -->
+  <view wx:elif="{{state === 'checking'}}" class="dim">正在检查最新版本...</view>
+  <view wx:elif="{{state === 'needWatch'}}" class="dim">{{msg}}</view>
+  <view wx:elif="{{state === 'error'}}" class="err">{{msg}}</view>
+
+  <block wx:if="{{state === 'downloading'}}">
+    <view class="label" style="margin-top:24rpx">下载固件 {{dlProgress}}%</view>
+    <progress percent="{{dlProgress}}" stroke-width="10" activeColor="#00c8ff"
+              backgroundColor="#2a323b" border-radius="6"/>
+  </block>
+
+  <block wx:if="{{state === 'sending' || state === 'done'}}">
+    <view class="label" style="margin-top:24rpx">
+      传输到手表 {{txProgress}}%<text wx:if="{{txSpeed}}"> · {{txSpeed}}</text>
+    </view>
+    <progress percent="{{txProgress}}" stroke-width="10" activeColor="#39d98a"
+              backgroundColor="#2a323b" border-radius="6"/>
+    <view class="dim" style="margin-top:12rpx">{{msg}}</view>
+  </block>
+
+  <!-- 检查失败/已是最新/升级完成后：给个"重新检查"入口 -->
+  <button wx:if="{{state === 'error' || state === 'latest' || state === 'needWatch' || state === 'done'}}"
+          class="btn ghost" bindtap="autoCheck">重新检查</button>
+</view>
+
+<view class="tip">
+  升级会先下载新固件，再通过蓝牙传给手表；手表写进"另一块"分区并自动重启，
+  传一半断了也不影响使用（A/B 双分区 + 回滚保护）✓
+</view>

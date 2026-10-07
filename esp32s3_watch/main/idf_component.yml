@@ -1,0 +1,8 @@
+# 这个文件告诉 ESP-IDF 的"组件管理器"去网上下载第三方库
+# lvgl               —— 图形界面库（和 OV-Watch 用的是同一个 UI 库）
+# espressif/esp_lvgl_port —— 乐鑫官方的 LVGL 适配层（把 LVGL 和屏幕、FreeRTOS 接起来）
+dependencies:
+  idf: '>=5.3'
+  lvgl/lvgl: ^9
+  espressif/esp_lvgl_port: ^2
+  espressif/esp_lcd_touch_cst816s: '*'

@@ -1,0 +1,13 @@
+/* pages/data/data.wxss */
+.tip {
+  color: #6c7681;
+  font-size: 22rpx;
+  margin: 0 30rpx 40rpx;
+  line-height: 1.6;
+}
+.logline {
+  color: #6c7681;
+  font-size: 24rpx;
+  text-align: center;
+  margin: 20rpx 0;
+}

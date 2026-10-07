@@ -1,0 +1,31 @@
+menu "Watch 手表配置"
+
+    config WATCH_WIFI_SSID
+        string "WiFi 名称 (SSID，必须是 2.4G 频段)"
+        default ""
+        help
+            手表开机后连这个 WiFi，用 NTP 把时间对成"实时时间"（表盘显示）。
+            留空 = 不联网：表盘用固件编译时间兜底，也能跑，只是时间不精确。
+
+    config WATCH_WIFI_PASSWORD
+        string "WiFi 密码"
+        default ""
+        help
+            没有密码（开放网络）就留空。
+
+    config WATCH_NTP_SERVER
+        string "NTP 服务器"
+        default "ntp.aliyun.com"
+        help
+            默认用阿里云的 NTP，国内比较快。
+            连不上可以换成 cn.pool.ntp.org 或 pool.ntp.org。
+
+    config WATCH_OTA_URL
+        string "OTA 固件下载地址"
+        default "http://192.168.1.174:8000/esp32s3_watch.bin"
+        help
+            手表从哪儿下载新固件（开发用 http 即可，正式产品应该用 https）。
+            做法：电脑上 cd 到放固件的目录，跑 python -m http.server 8000，
+            然后把 IP 换成你电脑的局域网 IP（cmd 里 ipconfig 查）。
+
+endmenu

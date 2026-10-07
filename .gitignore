@@ -1,0 +1,46 @@
+# ============================================================
+#  ESP32 手表项目 —— 共享仓库
+#  原则：只同步源码和工程配置；大文件、参考资料、编译产物、本机私有配置都不入库
+# ============================================================
+
+# ---- 参考资料 / 第三方代码（体积大，只放本机） ----
+/ESP32-S3资料/
+/TFT屏资料/
+/OV-Watch-参考/
+/esp32s3_project/
+/esp32s3_test/
+/drivers/
+
+# ---- 本机私有配置（含 WiFi 密码，严禁入库！） ----
+**/sdkconfig
+**/sdkconfig.old
+
+# ---- ESP-IDF 构建产物 / 组件缓存（可自动重建、重新下载） ----
+**/build/
+**/managed_components/
+**/.cache/
+
+# ---- Flutter / Dart 构建产物 ----
+**/.dart_tool/
+**/.idea/
+**/*.iml
+**/android/.gradle/
+**/android/local.properties
+**/windows/flutter/ephemeral/
+**/ios/Flutter/ephemeral/
+**/ios/Pods/
+
+# ---- 固件发布二进制（每次编译都变、体积大、含 WiFi 密码明文，不进 Git） ----
+# 发布包用 U 盘/网盘拷贝，或以后用 GitHub Releases 分发
+/fw_release/*.bin
+/ota_server/*.bin
+
+# ---- 微信开发者工具个人配置 ----
+**/project.private.config.json
+
+# ---- 系统 / 编辑器杂项 ----
+**/.DS_Store
+**/Thumbs.db
+**/desktop.ini
+**/*.log
+**/__pycache__/
