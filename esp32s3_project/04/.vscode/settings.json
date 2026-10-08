@@ -33,5 +33,5 @@
     "--query-driver=**",
     "--compile-commands-dir=d:\\esp32\\esp32s3_project\\04\\build"
   ],
-  "idf.flashType": "JTAG"
+  "idf.flashType": "UART"
 }

@@ -7,6 +7,6 @@ void app_main(void)
     while (1) 
     {
         vTaskDelay(pdMS_TO_TICKS(100));
-        WS_2812_set(255,0,0);
+        WS_2812_set(0,255,0);
     }
 }
