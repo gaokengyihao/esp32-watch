@@ -27,10 +27,10 @@ void printf_task(void *arg)
 
 void tft_task(void *arg)
 {
-    tft_spi_init();
+    tft_spi_gpio_init();
     tft_show_gpio_init();
     tft_init();
-    tft_set(0,239,0,247,GREEN);
+    tft_set(0,239,0,283,PINK);
     while (1) 
     {
         

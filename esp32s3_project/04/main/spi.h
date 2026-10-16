@@ -9,7 +9,7 @@
 #define     tft_spi_sda     GPIO_NUM_11
 #define     tft_spi_clk     GPIO_NUM_12
 
-void tft_spi_init();
+void tft_spi_gpio_init();
 void spi_sendbit(unsigned char bit);
 void spi_sendbyte(unsigned char byte);
 

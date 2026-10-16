@@ -1,6 +1,6 @@
 #include "sys.h"
 
-void tft_spi_init()
+void tft_spi_gpio_init()
 {
     gpio_config_t gpio_struct;
     gpio_struct.pin_bit_mask = (1ULL << tft_spi_cs_bit) | (1ULL << tft_spi_sda_bit) | (1ULL << tft_spi_clk_bit);

@@ -11,7 +11,10 @@ void tft_show_gpio_init()
     gpio_config(&gpio_struct);
 
     gpio_set_level(tft_show_dc, 0);
-    gpio_set_level(tft_show_rst, 0);
+    gpio_set_level(tft_show_rst, 0);//硬件复位
+    vTaskDelay(pdMS_TO_TICKS(10));
+    gpio_set_level(tft_show_rst, 1);
+    vTaskDelay(pdMS_TO_TICKS(120));
 }
 
 /*tft屏 触摸部分引脚配置*/
@@ -162,6 +165,8 @@ void tft_color_set(uint16_t color)
 /*刷新显示*/
 void tft_set(uint16_t x_start,uint16_t x_end,uint16_t y_start,uint16_t y_end,uint16_t color)
 {
+
+
     unsigned char x_start_high = (x_start >> 8);
     unsigned char x_start_low = x_start;
     unsigned char x_end_high = (x_end >> 8);
