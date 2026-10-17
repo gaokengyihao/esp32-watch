@@ -1,6 +1,6 @@
 /*git上传*/
 
-cd D:\esp32                  # 先进入仓库目录（在哪执行命令就操作哪个仓库）
+cd D:\esp32 使用 CMD时cd /d  D:\esp32                 # 先进入仓库目录（在哪执行命令就操作哪个仓库）
 git status                   # 【检查用】看看现在有哪些改动
 git add -A                   # ① 把所有改动装进"待提交篮子"（-A = 新增/修改/删除都要）
 git commit -m "提交说明"      # ② 拍快照，记下说明（这一步还在本地）
@@ -9,4 +9,6 @@ git push                     # ③ 推到 GitHub
 /*git拉工程*/
 
 cd D:\esp32
-git pull
+git pull  //拉：更新工程
+
+git clone 网址 //第一次从云端复印一整个仓库

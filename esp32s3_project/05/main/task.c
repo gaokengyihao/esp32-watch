@@ -31,10 +31,12 @@ void ui_task(void *arg)
     tft_show_gpio_init();
     tft_init();
     
-    task_lvgl_init();
+    // task_lvgl_init();
+    ui_show();
 
     while (1)
     {
+        
         lv_timer_handler();              /* ★ 曲柄：不摇它，画面永远不动 */
         vTaskDelay(pdMS_TO_TICKS(5));
     }
