@@ -30,8 +30,7 @@ void ui_task(void *arg)
     tft_spi_gpio_init();
     tft_show_gpio_init();
     tft_init();
-    
-    // task_lvgl_init();
+
     ui_show();
 
     while (1)

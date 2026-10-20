@@ -26,4 +26,12 @@
 #include "lvgl.h"
 #include "lvgl_port.h"
 
+/*UI image*/
+#include "image/image.h"
+
+/*tft屏参数*/
+#define TFT_H   284   
+#define TFT_W   240 
+
+
 #endif
