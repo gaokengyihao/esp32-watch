@@ -1,0 +1,77 @@
+{
+    // ==========================================================================
+    //  保底任务：即使 ESP-IDF 插件的 Flash 按钮抽风，这里也能一键编译/烧录
+    //  用法：Ctrl+Shift+P -> Tasks: Run Task -> 选下面的任务
+    //        （编译可以直接 Ctrl+Shift+B）
+    // ==========================================================================
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "ESP-IDF: 编译",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-NoProfile",
+                "-ExecutionPolicy",
+                "Bypass",
+                "-Command",
+                ". 'E:\\Espressif\\tools\\Microsoft.v6.1.PowerShell_profile.ps1' | Out-Null; idf.py build"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared",
+                "clear": true
+            }
+        },
+        {
+            "label": "ESP-IDF: 烧录 (COM10)",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-NoProfile",
+                "-ExecutionPolicy",
+                "Bypass",
+                "-Command",
+                ". 'E:\\Espressif\\tools\\Microsoft.v6.1.PowerShell_profile.ps1' | Out-Null; idf.py -p COM10 flash"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "clear": true
+            }
+        },
+        {
+            "label": "ESP-IDF: 烧录并看串口 (COM10)",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-NoProfile",
+                "-ExecutionPolicy",
+                "Bypass",
+                "-Command",
+                ". 'E:\\Espressif\\tools\\Microsoft.v6.1.PowerShell_profile.ps1' | Out-Null; idf.py -p COM10 flash monitor"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "clear": true
+            }
+        }
+    ]
+}
