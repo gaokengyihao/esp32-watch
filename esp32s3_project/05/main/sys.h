@@ -18,9 +18,11 @@
 
 /*协议*/
 #include "spi.h"
+#include "iic.h"
 
 /*硬件*/
-#include "tft.h"
+#include "tft_show.h"
+#include "tft_touch.h"
 
 /*UI lvgl*/
 #include "lvgl.h"

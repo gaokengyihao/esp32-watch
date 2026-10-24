@@ -4,7 +4,18 @@
     {
       "type": "gdbtarget",
       "request": "attach",
-      "name": "Eclipse CDT GDB Adapter"
+      "name": "ESP-IDF Debug",
+      "program": "${workspaceFolder}/build/${command:espIdf.getProjectName}.elf",
+      "gdb": "${command:espIdf.getToolchainGdb}",
+      "initialBreakpoint": "app_main",
+      "runOpenOCD": true,
+      "target": {
+        "connectCommands": [
+          "set remotetimeout 20",
+          "monitor reset halt",
+          "maintenance flush register-cache"
+        ]
+      }
     }
   ]
 }

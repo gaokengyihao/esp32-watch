@@ -50,76 +50,76 @@ void task_lvgl_init()
     lv_obj_center(label);                /* 第一个界面元素：居中一行字 */
 }
 
- static lv_obj_t * image_create(lv_obj_t * parent,const lv_image_dsc_t * image_struct,int32_t w,int32_t h,int32_t x,int32_t y)
+static lv_obj_t * obj_create(lv_obj_t * parent,int32_t w,int32_t h,int32_t x,int32_t y)
+{
+    lv_obj_t * obj = lv_obj_create(parent);//创建组件
+    lv_obj_set_size(obj, lv_pct(w), lv_pct(h));//设置长宽
+    lv_obj_set_pos(obj, x, y);//相对位置
+
+    lv_obj_set_style_bg_color(obj, lv_color_hex(0x101418), 0);  // 深色底
+    lv_obj_set_style_bg_opa(obj, LV_OPA_COVER, 0);              // 不透明度=100%
+
+    lv_obj_set_style_border_width(obj, 0, 0);//去掉边框显示
+    lv_obj_set_style_radius(obj, 0, 0);//设置每个角落的半径
+
+    return obj;
+}
+
+static lv_obj_t * image_create(lv_obj_t * parent,const lv_image_dsc_t * image_struct,int32_t w,int32_t h,int32_t x,int32_t y)
 {
     lv_obj_t * image = lv_image_create(parent);
     lv_image_set_src(image, image_struct);
 
-    uint32_t scale_x = 256 * w / TFT_W;
-    uint32_t scale_y = 256 * h / TFT_H;
-    lv_image_set_scale_x(image, scale_x);
-    lv_image_set_scale_y(image, scale_y);
-    // lv_image_set_scale(image, 32);//缩放
+    lv_obj_set_size(image, lv_pct(w), lv_pct(h));//长宽对于父类的百分比
 
-    lv_obj_set_size(image, w, h);//实际大小
     lv_obj_set_pos(image, x, y);//相对位置
 
+    lv_image_set_inner_align(image, LV_IMAGE_ALIGN_STRETCH);//图片自动缩放到框的大小
+    
     return image;
+}
+
+static lv_obj_t * label_create(lv_obj_t * parent,char * text)
+{
+    lv_obj_t * label = lv_label_create(parent);//创建标签
+    lv_label_set_text(label, text);//设置文本内容
+    lv_obj_set_flex_flow(parent, LV_FLEX_FLOW_COLUMN);                       // 子对象竖着排队
+    lv_obj_set_flex_align(parent, LV_FLEX_ALIGN_START,                       // 主轴：从顶部开始
+                                LV_FLEX_ALIGN_CENTER,                      // 交叉轴：水平居中
+                                LV_FLEX_ALIGN_CENTER);
+    lv_obj_set_style_pad_row(parent, 6, 0); 
+
+    /*字体颜色*/
+    lv_obj_set_style_text_color(label, lv_color_hex(0xE6EDF7), 0);
+
+    return label;
 }
 
 /*主页面ui显示*/
 void ui_show()
 {
-    //初始化
-    my_lvgl_port_init();
-
     //父类  框
-    lv_obj_t * parent = lv_obj_create(lv_screen_active());//创建组件
-    lv_obj_set_width(parent, lv_pct(100));//设置长
-    lv_obj_set_height(parent, lv_pct(100));//设置宽
-    lv_obj_set_pos(parent, 0, 0);//相对位置
+    lv_obj_t * parent = obj_create(lv_screen_active(), 100, 100, 0, 0);
 
-    lv_obj_set_style_bg_color(parent, lv_color_hex(0x101418), 0);  // 深色底
-    lv_obj_set_style_bg_opa(parent, LV_OPA_COVER, 0);              // 不透明度=100%
-
-    lv_obj_set_style_border_width(parent, 0, 0);//去掉边框显示
-    lv_obj_set_style_radius(parent, 0, 0);//设置每个角落的半径
-
-    //lv_obj_set_style_pad_all(parent, 0, 0);//清内边距
-
-    //子类  框
-    // lv_obj_t * obj1 = make_block(parent, 0, 0, 50, 50)
-
-    lv_obj_t * obj1 = lv_obj_create(parent);//创建组件
-    // lv_obj_set_width(obj1, lv_pct(100));//设置长
-    // lv_obj_set_height(obj1, lv_pct(100));//设置宽
-    lv_obj_set_width(obj1, lv_pct(50));//设置长
-    lv_obj_set_height(obj1, lv_pct(50));//设置宽
-    lv_obj_set_pos(obj1, 0, 0);//相对位置
-
-    // lv_obj_set_style_bg_color(obj1, lv_color_hex(0x101418), 0);  // 深色底
-    // lv_obj_set_style_bg_opa(obj1, LV_OPA_COVER, 0);              // 不透明度=100%
-
-    lv_obj_set_style_border_width(obj1, 0, 0);//去掉边框显示
-    lv_obj_set_style_radius(obj1, 0, 0);//设置每个角落的半径
-
-    // lv_obj_set_style_pad_all(obj1, 0, 0);//清内边距
+    //子类  框1
+    lv_obj_t * obj1 = obj_create(parent, 50, 50, 0, 0);
     
-    //obj1  成员
-    // lv_obj_t * obj1_label = lv_label_create(obj1);//创建标签
-    // lv_label_set_text(obj1_label, "nihao");//设置文本内容
-    // lv_obj_set_pos(obj1_label, 40, 40);//相对位置
+    //框1  成员
+    lv_obj_t * obj1_image = image_create(obj1,&image_Battery_level_struct,100,50,0,0);
+    lv_obj_t * obj1_label = label_create(obj1,"Battery");
 
-    //obj1  成员
-    lv_obj_t * obj1_image = image_create(obj1,&image_Battery_level_struct,25,25,30,30);
-    // lv_obj_t * obj1_image = lv_image_create(obj1);
-    // lv_image_set_src(obj1_image, &image_Battery_level_struct);
+    //子类  框2
+    lv_obj_t * obj2 = obj_create(parent, 50, 50, 120, 0);
 
-    // // lv_image_set_pivot(obj1_image, 0, 0);//图片缩放锚点
-    // lv_image_set_scale(obj1_image, 32);//缩放
+    //框2   成员
+    lv_obj_t * obj2_label_1 = label_create(obj2,"Thursday");
+    lv_obj_t * obj2_label_2 = label_create(obj2,"2026.10.22");
 
-    // lv_obj_set_size(obj1_image, 25, 25);//实际大小
-    // lv_obj_set_pos(obj1_image, 20, 20);//相对位置
+    //子类  框3
+    lv_obj_t * obj3 = obj_create(parent, 50, 50, 0, 141);
+
+    //子类  框4
+    lv_obj_t * obj4 = obj_create(parent, 50, 50, 120, 141);
 
 }
 

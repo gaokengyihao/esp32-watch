@@ -32,8 +32,8 @@
 #define LIGHTGRAY    0xCE59   /* 浅灰 (200,200,200) */
 
 void tft_show_gpio_init();
-void tft_send(unsigned char type,unsigned char byte);
-void tft_init();
+void tft_spi_send(unsigned char type,unsigned char byte);
+void tft_show_init();
 void tft_color_set(uint16_t color);
 void tft_range_set(uint16_t x_start,uint16_t x_end,uint16_t y_start,uint16_t y_end);
 void tft_set(uint16_t x_start,uint16_t x_end,uint16_t y_start,uint16_t y_end,uint16_t color);

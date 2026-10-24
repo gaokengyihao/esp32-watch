@@ -27,16 +27,24 @@ void printf_task(void *arg)
 
 void ui_task(void *arg)
 {
-    tft_spi_gpio_init();
-    tft_show_gpio_init();
-    tft_init();
+    vTaskDelay(pdMS_TO_TICKS(10));
 
+    /*显示部分*/
+    tft_show_init();
+
+    /*触摸部分*/
+    // tft_touch_init();
+
+    /*lvgl部分*/
+    my_lvgl_port_init();
+
+    /*ui部分*/
     ui_show();
 
     while (1)
     {
-        
         lv_timer_handler();              /* ★ 曲柄：不摇它，画面永远不动 */
-        vTaskDelay(pdMS_TO_TICKS(5));
+        // tft_iic_read();
+        vTaskDelay(pdMS_TO_TICKS(10));
     }
 }

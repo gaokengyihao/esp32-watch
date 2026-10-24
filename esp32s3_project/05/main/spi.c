@@ -3,7 +3,7 @@
 /*tft屏 spi通信引脚初始化*/
 void tft_spi_gpio_init()
 {
-    gpio_config_t gpio_struct;
+    gpio_config_t gpio_struct = {0};
     gpio_struct.pin_bit_mask = (1ULL << tft_spi_cs_bit) | (1ULL << tft_spi_sda_bit) | (1ULL << tft_spi_clk_bit);
     gpio_struct.mode = GPIO_MODE_OUTPUT;
     gpio_config(&gpio_struct);
