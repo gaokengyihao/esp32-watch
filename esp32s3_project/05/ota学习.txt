@@ -1,0 +1,11 @@
+OTA学习
+
+OTA是“Over-The-Air”的缩写，中文可译为“空中下载技术”或“远程升级技术”
+
+单片机flash中存储：1、启动引导程序（bootloader）2、分区表 3、你的应用程序（app）3、OTA 升级用的“记录本”（otadata）
+
+原上电流程为 上电---ROM Bootloader---二级Bootloader---读分区表---读otadata确定启动哪个程序---启动对应app
+
+ROM Bootloader功能：1、看启动引脚确定是下载模式还是正常启动 2、正常启动后从0x0读二级bootloader 3、提供串口/USB烧录协议
+
+二级Bootloader功能：1、初始化 Flash、时钟、PSRAM（如果有）2、读 分区表（0x8000），知道 app、NVS、otadata 在哪 3、读 otadata，决定这次启动 ota_0 还是 ota_1 4、校验 app 镜像（magic、校验和/SHA，开了安全启动还会验签名） 5、配置内存映射，跳到 app 的入口，最终进入 app_main() 6、如果开了 回滚，新固件启动失败会自动退回旧分区。

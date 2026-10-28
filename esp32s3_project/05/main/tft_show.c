@@ -38,6 +38,7 @@ void tft_show_init()
     /*引脚初始化*/
     tft_spi_gpio_init();
     tft_show_gpio_init();
+    vTaskDelay(pdMS_TO_TICKS(50));
 
     tft_spi_send(Command , 0x11);     
 

@@ -27,7 +27,7 @@ void printf_task(void *arg)
 
 void ui_task(void *arg)
 {
-    vTaskDelay(pdMS_TO_TICKS(10));
+    vTaskDelay(pdMS_TO_TICKS(500));
 
     /*显示部分*/
     tft_show_init();
