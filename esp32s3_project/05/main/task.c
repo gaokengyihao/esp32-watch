@@ -25,7 +25,7 @@ void printf_task(void *arg)
     }
 }
 
-void ui_task(void *arg)
+void lvgl_task(void *arg)
 {
     vTaskDelay(pdMS_TO_TICKS(500));
 
@@ -33,7 +33,7 @@ void ui_task(void *arg)
     tft_show_init();
 
     /*触摸部分*/
-    // tft_touch_init();
+    tft_touch_init();
 
     /*lvgl部分*/
     my_lvgl_port_init();
@@ -43,8 +43,17 @@ void ui_task(void *arg)
 
     while (1)
     {
-        lv_timer_handler();              /* ★ 曲柄：不摇它，画面永远不动 */
-        // tft_iic_read();
+        lv_timer_handler();
+        tft_iic_read();
+        vTaskDelay(pdMS_TO_TICKS(10));
+    }
+}
+
+void bluetooth_task(void *arg)
+{
+    bluetooth_init(); 
+    while(1)
+    {
         vTaskDelay(pdMS_TO_TICKS(10));
     }
 }

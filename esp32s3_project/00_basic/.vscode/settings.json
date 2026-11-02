@@ -1,0 +1,15 @@
+{
+    "C_Cpp.intelliSenseEngine": "default",
+    "idf.espIdfPathWin": "d:\\Soft_APP\\ESP_IDF\\master\\esp-idf",
+    "idf.openOcdConfigs": [
+        "board/esp32s3-builtin.cfg"
+    ],
+    "idf.toolsPathWin": "d:\\Soft_APP\\ESP_IDF\\tools",
+    "files.autoGuessEncoding": true,
+    "idf.portWin": "COM33",
+    "idf.flashType": "JTAG",
+    "idf.port": "COM14",
+    "idf.espIdfPath": "/root/esp/v5.4/esp-idf",
+    "idf.toolsPath": "/root/.espressif",
+    "idf.currentSetup": "C:\\esp\\v6.1-beta1\\esp-idf"
+}

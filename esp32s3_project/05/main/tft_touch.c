@@ -23,9 +23,7 @@ void tft_touch_init()
     tft_touch_gpio_init();
     
     gpio_set_level(tft_touch_rst, 0);
-    vTaskDelay(pdMS_TO_TICKS(200));
     gpio_set_level(tft_touch_rst, 1);
-    vTaskDelay(pdMS_TO_TICKS(200));
 }
 
 //地址0X15，写发0，读发1

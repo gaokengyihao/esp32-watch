@@ -20,6 +20,9 @@
 #include "spi.h"
 #include "iic.h"
 
+/*蓝牙*/
+#include "bluetooth.h"
+
 /*硬件*/
 #include "tft_show.h"
 #include "tft_touch.h"
@@ -30,6 +33,9 @@
 
 /*UI image*/
 #include "image/image.h"
+
+/*功能*/
+#include "ota.h"//ota
 
 /*tft屏参数*/
 #define TFT_H   284   

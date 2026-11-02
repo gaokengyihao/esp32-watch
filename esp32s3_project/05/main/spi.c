@@ -1,4 +1,5 @@
 #include "sys.h"
+#include "esp_rom_sys.h"
 
 /*tft屏 spi通信引脚初始化*/
 void tft_spi_gpio_init()
@@ -14,10 +15,11 @@ void tft_spi_gpio_init()
 
 void spi_sendbit(unsigned char bit)
 {
-    //gpio_set_level(tft_spi_cs, 0);//片选
-    gpio_set_level(tft_spi_sda, bit);//输出电平确定
-    gpio_set_level(tft_spi_clk, 1);//时钟信号来
-    gpio_set_level(tft_spi_clk, 0);//时钟信号结束
+    gpio_set_level(tft_spi_sda, bit);
+    gpio_set_level(tft_spi_clk, 1);
+    esp_rom_delay_us(1);
+    gpio_set_level(tft_spi_clk, 0);
+    esp_rom_delay_us(1);
 }
 
 void spi_sendbyte(unsigned char byte)

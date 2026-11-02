@@ -3,6 +3,7 @@
 
 void led_task(void *arg);
 void printf_task(void *arg);
-void ui_task(void *arg);
+void lvgl_task(void *arg);
+void bluetooth_task(void *arg);
 
 #endif

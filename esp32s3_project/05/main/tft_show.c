@@ -12,9 +12,9 @@ void tft_show_gpio_init()
 
     gpio_set_level(tft_show_dc, 0);
     gpio_set_level(tft_show_rst, 0);//硬件复位
-    vTaskDelay(pdMS_TO_TICKS(10));
+    vTaskDelay(pdMS_TO_TICKS(100));
     gpio_set_level(tft_show_rst, 1);
-    vTaskDelay(pdMS_TO_TICKS(120));
+    vTaskDelay(pdMS_TO_TICKS(100));
 }
 
 void tft_spi_send(unsigned char type,unsigned char byte)
@@ -38,95 +38,7 @@ void tft_show_init()
     /*引脚初始化*/
     tft_spi_gpio_init();
     tft_show_gpio_init();
-    vTaskDelay(pdMS_TO_TICKS(50));
-
-    tft_spi_send(Command , 0x11);     
-
-    vTaskDelay(pdMS_TO_TICKS(120));                
-
-    tft_spi_send(Command , 0x36);     
-    tft_spi_send(Parameter , 0x00);   
-
-    tft_spi_send(Command , 0x3A);     
-    tft_spi_send(Parameter , 0x05);   
-
-    tft_spi_send(Command , 0xB2);     
-    tft_spi_send(Parameter , 0x0C);   
-    tft_spi_send(Parameter , 0x0C);   
-    tft_spi_send(Parameter , 0x00);   
-    tft_spi_send(Parameter , 0x33);   
-    tft_spi_send(Parameter , 0x33);   
-
-    tft_spi_send(Command , 0xB7);     
-    tft_spi_send(Parameter , 0x05);   
-
-    tft_spi_send(Command , 0xBB);     
-    tft_spi_send(Parameter , 0x21);   
-
-    tft_spi_send(Command , 0xC0);     
-    tft_spi_send(Parameter , 0x2C);   
-
-    tft_spi_send(Command , 0xC2);     
-    tft_spi_send(Parameter , 0x01);   
-
-    tft_spi_send(Command , 0xC3);     
-    tft_spi_send(Parameter , 0x15);   
-
-    tft_spi_send(Command , 0xC6);     
-    tft_spi_send(Parameter , 0x0F);   
-
-    tft_spi_send(Command , 0xD0);     
-    tft_spi_send(Parameter , 0xA7);
-
-    tft_spi_send(Command , 0xD0);     
-    tft_spi_send(Parameter , 0xA4);   
-    tft_spi_send(Parameter , 0xA1);   
-
-    tft_spi_send(Command , 0xD6);     
-    tft_spi_send(Parameter , 0xA1);   //sleep in后，gate输出为GND
-
-    tft_spi_send(Command , 0xE0);
-    tft_spi_send(Parameter , 0xF0);
-    tft_spi_send(Parameter , 0x05);
-    tft_spi_send(Parameter , 0x0E);
-    tft_spi_send(Parameter , 0x08);
-    tft_spi_send(Parameter , 0x0A);
-    tft_spi_send(Parameter , 0x17);
-    tft_spi_send(Parameter , 0x39);
-    tft_spi_send(Parameter , 0x54);
-    tft_spi_send(Parameter , 0x4E);
-    tft_spi_send(Parameter , 0x37);
-    tft_spi_send(Parameter , 0x12);
-    tft_spi_send(Parameter , 0x12);
-    tft_spi_send(Parameter , 0x31);
-    tft_spi_send(Parameter , 0x37);
-
-    tft_spi_send(Command , 0xE1);
-    tft_spi_send(Parameter , 0xF0);
-    tft_spi_send(Parameter , 0x10);
-    tft_spi_send(Parameter , 0x14);
-    tft_spi_send(Parameter , 0x0D);
-    tft_spi_send(Parameter , 0x0B);
-    tft_spi_send(Parameter , 0x05);
-    tft_spi_send(Parameter , 0x39);
-    tft_spi_send(Parameter , 0x44);
-    tft_spi_send(Parameter , 0x4D);
-    tft_spi_send(Parameter , 0x38);
-    tft_spi_send(Parameter , 0x14);
-    tft_spi_send(Parameter , 0x14);
-    tft_spi_send(Parameter , 0x2E);
-    tft_spi_send(Parameter , 0x35);
-
-    tft_spi_send(Command , 0xE4);     
-    tft_spi_send(Parameter , 0x23);   
-    tft_spi_send(Parameter , 0x00);   //设定gate起点位置
-    tft_spi_send(Parameter , 0x00);   //当gate没有用完时，bit4(TMG)设为0
-
-    tft_spi_send(Command , 0x21);     
-
-    tft_spi_send(Command , 0x29);     
-
-    tft_spi_send(Command , 0x2C);     
+    vTaskDelay(pdMS_TO_TICKS(50));     
 
 }
 
