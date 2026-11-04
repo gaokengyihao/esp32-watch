@@ -1,11 +1,15 @@
-#ifndef     _TFT_H_
-#define     _TFT_H_
+#ifndef     _TFT_SHOW_H_
+#define     _TFT_SHOW_H_
 
 /*引脚*/
-#define     tft_show_dc_bit      13
-#define     tft_show_rst_bit     14
-#define     tft_show_dc      GPIO_NUM_13
-#define     tft_show_rst     GPIO_NUM_14
+#define     tft_dc_bit      40
+// #define     tft_rst_bit     14
+// #define     tft_PWR_bit     14
+#define     tft_dc          GPIO_NUM_40
+// #define     tft_rst         GPIO_NUM_14
+// #define     tft_PWR         GPIO_NUM_14
+
+#define     
 
 /*发送类型*/
 #define     Command       0

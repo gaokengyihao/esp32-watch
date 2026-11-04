@@ -5,7 +5,7 @@
 #define     tft_touch_rst_bit      6
 #define     tft_touch_int_bit      7
 #define     tft_touch_rst         GPIO_NUM_6
-#define     tft_touch_int     GPIO_NUM_7
+#define     tft_touch_int         GPIO_NUM_7
 
 typedef struct{
     uint8_t touch_num, x_high_touch, x_low_touch, y_high_touch, y_low_touch, touch_press;

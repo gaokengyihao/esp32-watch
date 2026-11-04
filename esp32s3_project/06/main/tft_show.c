@@ -6,14 +6,16 @@
 void tft_show_gpio_init()
 {
     gpio_config_t gpio_struct = {0};
-    gpio_struct.pin_bit_mask = (1ULL << tft_show_dc_bit) | (1ULL << tft_show_rst_bit);
+    gpio_struct.pin_bit_mask = (1ULL << tft_dc_bit) | (1ULL << tft_rst_bit) | (1ULL << tft_PWR_bit);
     gpio_struct.mode = GPIO_MODE_OUTPUT;
     gpio_config(&gpio_struct);
 
-    gpio_set_level(tft_show_dc, 0);
-    gpio_set_level(tft_show_rst, 0);//硬件复位
+    gpio_set_level(tft_PWR, 0);
+    
+    gpio_set_level(tft_dc, 0);
+    gpio_set_level(tft_rst, 0);//硬件复位
     vTaskDelay(pdMS_TO_TICKS(100));
-    gpio_set_level(tft_show_rst, 1);
+    gpio_set_level(tft_rst, 1);
     vTaskDelay(pdMS_TO_TICKS(100));
 }
 
@@ -21,11 +23,11 @@ void tft_spi_send(unsigned char type,unsigned char byte)
 {
     if (type)
     {
-        gpio_set_level(tft_show_dc, 1);
+        gpio_set_level(tft_dc, 1);
     }
     else
     {
-        gpio_set_level(tft_show_dc, 0);
+        gpio_set_level(tft_dc, 0);
     }
 
     spi_sendbyte(byte);

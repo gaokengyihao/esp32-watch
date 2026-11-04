@@ -33,7 +33,7 @@ void lvgl_task(void *arg)
     tft_show_init();
 
     /*触摸部分*/
-    tft_touch_init();
+    // tft_touch_init();
 
     /*lvgl部分*/
     my_lvgl_port_init();
@@ -44,7 +44,7 @@ void lvgl_task(void *arg)
     while (1)
     {
         lv_timer_handler();
-        tft_iic_read();
+        // tft_iic_read();
         vTaskDelay(pdMS_TO_TICKS(10));
     }
 }

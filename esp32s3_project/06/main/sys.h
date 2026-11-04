@@ -26,6 +26,7 @@
 /*硬件*/
 #include "tft_show.h"
 #include "tft_touch.h"
+#include "xl9555.h"
 
 /*UI lvgl*/
 #include "lvgl.h"
@@ -40,6 +41,7 @@
 /*tft屏参数*/
 #define TFT_H   284   
 #define TFT_W   240 
+
 
 
 #endif
