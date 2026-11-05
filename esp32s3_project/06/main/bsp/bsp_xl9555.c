@@ -36,6 +36,7 @@ void xl9555struct_DeInit()
 /*设置引脚模式*/
 void xl9555_io_mode_init(uint8_t Configuration_Port, uint8_t num, uint8_t mode_value)
 {
+    iic_start();
     iic_write_byte(xl955_address_write);
 
     if(Configuration_Port == 1)
@@ -46,7 +47,7 @@ void xl9555_io_mode_init(uint8_t Configuration_Port, uint8_t num, uint8_t mode_v
         }
         else
         {
-            xl9555struct.Configuration_Port_1 &= (0xfe << num);
+            xl9555struct.Configuration_Port_1 &= ~(0x01 << num);
         }
         iic_write_byte(Configuration_Port_1_command);
         iic_write_byte(xl9555struct.Configuration_Port_1);
@@ -59,17 +60,19 @@ void xl9555_io_mode_init(uint8_t Configuration_Port, uint8_t num, uint8_t mode_v
         }
         else
         {
-            xl9555struct.Configuration_Port_0 &= (0xfe << num);
+            xl9555struct.Configuration_Port_0 &= ~(0x01 << num);
         }
         iic_write_byte(Configuration_Port_0_command);
         iic_write_byte(xl9555struct.Configuration_Port_0);
     }
 
+    iic_stop();
 }
 
 /*设置io1引脚输出电平*/
 void xl9555_writebit(uint8_t Output_Port, uint8_t num, uint8_t value)
 {
+    iic_start();
     iic_write_byte(xl955_address_write);//地址+写
 
     if(Output_Port == 1)
@@ -80,7 +83,7 @@ void xl9555_writebit(uint8_t Output_Port, uint8_t num, uint8_t value)
         }
         else
         {
-            xl9555struct.Output_Port_1 &= (0xfe << num);
+            xl9555struct.Output_Port_1 &= ~(0x01 << num);
         }
         iic_write_byte(Output_Port_1_command);
         iic_write_byte(xl9555struct.Output_Port_1);
@@ -93,10 +96,11 @@ void xl9555_writebit(uint8_t Output_Port, uint8_t num, uint8_t value)
         }
         else
         {
-            xl9555struct.Output_Port_0 &= (0xfe << num);
+            xl9555struct.Output_Port_0 &= ~(0x01 << num);
         }
         iic_write_byte(Output_Port_0_command);
         iic_write_byte(xl9555struct.Output_Port_0);
     }
 
+    iic_stop();
 }

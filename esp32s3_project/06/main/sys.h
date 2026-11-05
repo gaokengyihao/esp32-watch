@@ -7,9 +7,6 @@
 #include "freertos/task.h"        /* vTaskDelay / xTaskCreate 这些函数在这 */
 #include "esp_timer.h"//esp32 
 
-/*核心板*/
-#include "gpio.h"
-
 /*操作系统*/
 #include "task.h"
 
@@ -39,8 +36,8 @@
 #include "ota.h"//ota
 
 /*tft屏参数*/
-#define TFT_H   284   
-#define TFT_W   240 
+#define TFT_H   320   
+#define TFT_W   240
 
 
 

@@ -1,5 +1,5 @@
-#ifndef     _XL9555_H_
-#define     _XL9555_H_
+#ifndef     _BSP_XL9555_H_
+#define     _BSP_XL9555_H_
 
 #include <stdint.h>
 

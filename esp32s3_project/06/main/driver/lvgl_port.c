@@ -33,21 +33,13 @@ void my_lvgl_port_init()
     lv_tick_set_cb(my_tick_get_cb);
 
     //内存
-    lv_display_t * disp = lv_display_create(240, 284);//水平像素240，垂直像素284
+    lv_display_t * disp = lv_display_create(TFT_W, TFT_H);//水平像素240，垂直像素284
     lv_display_set_buffers(disp, draw_buf, 0, sizeof(draw_buf),LV_DISPLAY_RENDER_MODE_PARTIAL);
 
     // 其像素格式和尺寸(creating_a_display)；
     // 应在何处为其渲染像素(draw_buffers)；
     // 如何将那些渲染好的像素发送给它(flush_callback)。
     lv_display_set_flush_cb(disp, my_lv_display_flush_cb_t);
-}
-
-void task_lvgl_init()
-{
-    my_lvgl_port_init();                    /* ★ 启动 LVGL（四零件在这装好） */
-    lv_obj_t *label = lv_label_create(lv_screen_active());
-    lv_label_set_text(label, "gaokengyihao !");
-    lv_obj_center(label);                /* 第一个界面元素：居中一行字 */
 }
 
 static lv_obj_t * obj_create(lv_obj_t * parent,int32_t w,int32_t h,int32_t x,int32_t y)
@@ -93,6 +85,17 @@ static lv_obj_t * label_create(lv_obj_t * parent,char * text)
     lv_obj_set_style_text_color(label, lv_color_hex(0xE6EDF7), 0);
 
     return label;
+}
+
+/*全屏图片显示*/
+void image_show(const lv_image_dsc_t *imagestruct)
+{
+    //父类  框
+    lv_obj_t * parent = obj_create(lv_screen_active(), 100, 100, 0, 0);
+
+    //图片  成员
+    lv_obj_t * obj1_image = image_create(parent,imagestruct,100,100,0,0);
+    // lv_obj_t * obj1_label = label_create(obj1,"gaokeng");
 }
 
 /*主页面ui显示*/

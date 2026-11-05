@@ -1,5 +1,5 @@
-#ifndef     _SPI_H_
-#define     _SPI_H_
+#ifndef     _BSP_SPI_H_
+#define     _BSP_SPI_H_
 
 
 #define     spi_clk_bit     12
@@ -11,7 +11,6 @@
 
 #define     tft_spi_cs          GPIO_NUM_21
 #define     tft_spi_sda         GPIO_NUM_11
-
 
 void tft_spi_gpio_init();
 void spi_sendbit(unsigned char bit);

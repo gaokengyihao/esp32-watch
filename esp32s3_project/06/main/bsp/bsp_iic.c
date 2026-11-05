@@ -13,6 +13,7 @@ void tft_iic_gpio_init()
     gpio_set_level(iic_sda, 1);
 }
 
+
 // 起始信号：SCL为高电平的时候，SDA由高电平向低电平跳变。
 void iic_start()
 {

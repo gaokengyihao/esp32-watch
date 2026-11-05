@@ -39,7 +39,8 @@ void lvgl_task(void *arg)
     my_lvgl_port_init();
 
     /*ui部分*/
-    ui_show();
+    // ui_show();
+    image_show(&gaokengstruct);
 
     while (1)
     {

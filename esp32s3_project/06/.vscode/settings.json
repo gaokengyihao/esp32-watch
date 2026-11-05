@@ -39,8 +39,8 @@
   "idf.openOcdConfigs": [
     "board/esp32s3-builtin.cfg"
   ],
-  "idf.port": "COM9",
-  "idf.flashType": "UART",
+  "idf.port": "COM14",
+  "idf.flashType": "JTAG",
   "idf.flashBaudRate": "460800",
   "idf.monitorBaudRate": "115200",
   "idf.saveBeforeBuild": true,

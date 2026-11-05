@@ -4,5 +4,6 @@
 void ui_show();
 void task_lvgl_init();
 void my_lvgl_port_init();
+void image_show(const lv_image_dsc_t *imagestruct);
 
 #endif

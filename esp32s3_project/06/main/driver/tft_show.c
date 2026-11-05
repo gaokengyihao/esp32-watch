@@ -6,16 +6,20 @@
 void tft_show_gpio_init()
 {
     gpio_config_t gpio_struct = {0};
-    gpio_struct.pin_bit_mask = (1ULL << tft_dc_bit) | (1ULL << tft_rst_bit) | (1ULL << tft_PWR_bit);
+    gpio_struct.pin_bit_mask = (1ULL << tft_dc_bit);
     gpio_struct.mode = GPIO_MODE_OUTPUT;
     gpio_config(&gpio_struct);
 
-    gpio_set_level(tft_PWR, 0);
+    xl9555struct_DeInit();
+    xl9555_io_mode_init(1, 2, 0);//slcd_rst
+    xl9555_io_mode_init(1, 3, 0);//slcd_pwr
+
+    PWR_writebit(1);
     
-    gpio_set_level(tft_dc, 0);
-    gpio_set_level(tft_rst, 0);//硬件复位
+    dc_writebit(0);
+    rst_writebit(0);//硬件复位
     vTaskDelay(pdMS_TO_TICKS(100));
-    gpio_set_level(tft_rst, 1);
+    rst_writebit(1);
     vTaskDelay(pdMS_TO_TICKS(100));
 }
 
@@ -23,11 +27,11 @@ void tft_spi_send(unsigned char type,unsigned char byte)
 {
     if (type)
     {
-        gpio_set_level(tft_dc, 1);
+        dc_writebit(1);
     }
     else
     {
-        gpio_set_level(tft_dc, 0);
+        dc_writebit(0);
     }
 
     spi_sendbyte(byte);
@@ -38,10 +42,26 @@ void tft_spi_send(unsigned char type,unsigned char byte)
 void tft_show_init()
 {
     /*引脚初始化*/
+    tft_iic_gpio_init();
     tft_spi_gpio_init();
     tft_show_gpio_init();
     vTaskDelay(pdMS_TO_TICKS(50));     
 
+    /*驱动初始化*/
+    tft_spi_send(Command , 0x11);     
+    vTaskDelay(pdMS_TO_TICKS(120));                
+
+    tft_spi_send(Command , 0x36);     
+    tft_spi_send(Parameter , 0x00);   
+
+    tft_spi_send(Command , 0x3A);     
+    tft_spi_send(Parameter , 0x65);  
+
+    tft_spi_send(Command , 0x21);
+    vTaskDelay(pdMS_TO_TICKS(120));
+
+    tft_spi_send(Command , 0x29);
+    vTaskDelay(pdMS_TO_TICKS(120));
 }
 
 /*设置窗口，先列后行*/

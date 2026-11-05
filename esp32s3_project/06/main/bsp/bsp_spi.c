@@ -5,20 +5,20 @@
 void tft_spi_gpio_init()
 {
     gpio_config_t gpio_struct = {0};
-    gpio_struct.pin_bit_mask = (1ULL << tft_spi_cs_bit) | (1ULL << tft_spi_sda_bit) | (1ULL << tft_spi_clk_bit);
+    gpio_struct.pin_bit_mask = (1ULL << tft_spi_cs_bit) | (1ULL << tft_spi_sda_bit) | (1ULL << spi_clk_bit);
     gpio_struct.mode = GPIO_MODE_OUTPUT;
     gpio_config(&gpio_struct);
 
     gpio_set_level(tft_spi_cs, 1);//cs上拉
-    gpio_set_level(tft_spi_clk, 0);//clk置0
+    gpio_set_level(spi_clk, 0);//clk置0
 }
 
 void spi_sendbit(unsigned char bit)
 {
     gpio_set_level(tft_spi_sda, bit);
-    gpio_set_level(tft_spi_clk, 1);
+    gpio_set_level(spi_clk, 1);
     esp_rom_delay_us(1);
-    gpio_set_level(tft_spi_clk, 0);
+    gpio_set_level(spi_clk, 0);
     esp_rom_delay_us(1);
 }
 

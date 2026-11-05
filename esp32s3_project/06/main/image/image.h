@@ -3,6 +3,6 @@
 
 LV_IMAGE_DECLARE(image1_struct);
 LV_IMAGE_DECLARE(image_Battery_level_struct);
-
+LV_IMAGE_DECLARE(gaokengstruct);
 
 #endif
