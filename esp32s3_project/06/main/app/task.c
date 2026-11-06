@@ -29,6 +29,9 @@ void lvgl_task(void *arg)
 {
     vTaskDelay(pdMS_TO_TICKS(500));
 
+    /*板子引脚初始化*/
+    board_init();
+
     /*显示部分*/
     tft_show_init();
 

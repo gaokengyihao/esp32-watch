@@ -1,8 +1,8 @@
-#include "sys.h"
+#include "board.h"
 #include "esp_rom_sys.h"
 
 /*tft屏 spi通信引脚初始化*/
-void tft_spi_gpio_init()
+void bsp_spi_gpio_init()
 {
     gpio_config_t gpio_struct = {0};
     gpio_struct.pin_bit_mask = (1ULL << tft_spi_cs_bit) | (1ULL << tft_spi_sda_bit) | (1ULL << spi_clk_bit);

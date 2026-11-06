@@ -1,4 +1,16 @@
-#include "sys.h"
+#include "board.h"
+#include "p183b001_v4_ctp.h"
+
+/*屏参数*/
+tft_sizetypedef const p183b001_v4_ctp = {
+    .TFT_H = p183b001_v4_ctp_h,
+    .TFT_W = p183b001_v4_ctp_w,
+};
+
+typedef struct{
+    uint8_t touch_num, x_high_touch, x_low_touch, y_high_touch, y_low_touch, touch_press;
+    uint16_t x_touch, y_touch;
+}tft_touch_structtypedef;
 
 /*tft屏 触摸部分引脚配置*/
 void tft_touch_gpio_init()

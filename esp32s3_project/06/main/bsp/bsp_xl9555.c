@@ -1,4 +1,9 @@
-#include "sys.h"
+#include "board.h"
+
+typedef struct{
+    uint8_t Input_Port_0,Input_Port_1,Output_Port_0,Output_Port_1,Polarity_Inversion_Port_0,Polarity_Inversion_Port_1,
+    Configuration_Port_0,Configuration_Port_1;
+}xl9555structtypedef;
 
 xl9555structtypedef xl9555struct;
 
@@ -31,9 +36,15 @@ void xl9555struct_DeInit()
 }
 
 #define configuration_Port        0b11110011//1.3 1.2设为输出 //1.3 slcd_pwr 1.2 slcd_rst
-/*注意：设置配置时除输出外全置1（高阻）*/
-/*不配置则为上拉输入，置1为高阻*/
-/*设置引脚模式*/
+/***********************************************
+函数名称：
+函数功能：设置引脚模式
+入口参数：Configuration_Port：寄存器0或1
+         num：0~7中第几位
+         mode_value：设置输出输入状态，0为输出，1为输入
+出口参数：
+备注：注意：设置配置时除输出外全置1（高阻），不配置则默认为上拉输入，置1为高阻
+************************************************/
 void xl9555_io_mode_init(uint8_t Configuration_Port, uint8_t num, uint8_t mode_value)
 {
     iic_start();

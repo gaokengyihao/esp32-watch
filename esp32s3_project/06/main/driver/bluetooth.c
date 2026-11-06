@@ -1,4 +1,3 @@
-#include "sys.h"
 
 /*
  * SPDX-FileCopyrightText: 2026 Espressif Systems (Shanghai) CO LTD

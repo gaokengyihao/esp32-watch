@@ -1,7 +1,7 @@
-#include "sys.h"
+#include "board.h"
 
 /*iic通信引脚初始化*/
-void tft_iic_gpio_init()
+void bsp_iic_gpio_init()
 {
     gpio_config_t gpio_struct = {0};
     gpio_struct.pin_bit_mask = (1ULL << iic_scl_bit) | (1ULL << iic_sda_bit);

@@ -1,18 +1,7 @@
-#ifndef     _TFT_SHOW_H_
-#define     _TFT_SHOW_H_
+#ifndef     _ST7789_H_
+#define     _ST7789_H_
 
-/*引脚*/
-#define     tft_dc_bit          40
-// #define     tft_rst_bit      14
-// #define     tft_PWR_bit      14
-#define     tft_dc              GPIO_NUM_40
-// #define     tft_rst          GPIO_NUM_14
-// #define     tft_PWR          GPIO_NUM_14
-
-#define     dc_writebit(x)      gpio_set_level(tft_dc, (x))
-#define     rst_writebit(x)     xl9555_writebit(1, 2, (x))
-#define     PWR_writebit(x)     xl9555_writebit(1, 3, (x))
-
+#include <stdint.h>
 
 /*发送类型*/
 #define     Command       0
@@ -38,12 +27,11 @@
 #define GRAY         0x8410   /* 中灰 (128,128,128) */
 #define LIGHTGRAY    0xCE59   /* 浅灰 (200,200,200) */
 
-void tft_show_gpio_init();
-void tft_spi_send(unsigned char type,unsigned char byte);
-void tft_show_init();
-void tft_color_set(uint16_t color);
-void tft_range_set(uint16_t x_start,uint16_t x_end,uint16_t y_start,uint16_t y_end);
-void tft_set(uint16_t x_start,uint16_t x_end,uint16_t y_start,uint16_t y_end,uint16_t color);
+void st7789_tft_spi_send(unsigned char type,unsigned char byte);
+void st7789_tft_show_init();
+void st7789_tft_color_set(uint16_t color);
+void st7789_tft_range_set(uint16_t x_start,uint16_t x_end,uint16_t y_start,uint16_t y_end);
+void st7789_tft_set(uint16_t x_start,uint16_t x_end,uint16_t y_start,uint16_t y_end,uint16_t color);
 
 
 

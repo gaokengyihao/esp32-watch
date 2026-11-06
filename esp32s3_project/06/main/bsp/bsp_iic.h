@@ -1,13 +1,9 @@
 #ifndef     _BSP_IIC_H_
 #define     _BSP_IIC_H_
 
-#define     iic_scl_bit     42
-#define     iic_sda_bit     41
+#include <stdint.h>
 
-#define     iic_scl         GPIO_NUM_42
-#define     iic_sda         GPIO_NUM_41
-
-void tft_iic_gpio_init();
+void bsp_iic_gpio_init();
 
 void iic_start();
 void iic_stop();

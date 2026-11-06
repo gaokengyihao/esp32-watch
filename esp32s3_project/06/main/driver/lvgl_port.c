@@ -1,4 +1,4 @@
-#include "sys.h"
+#include "panel.h"
 
 static uint8_t draw_buf[240 * 40 * 2];
 
@@ -10,13 +10,13 @@ static uint32_t my_tick_get_cb()
 
 void my_lv_display_flush_cb_t(lv_display_t * disp, const lv_area_t * area, uint8_t * px_map)
 {
-  tft_range_set(area->x1,area->x2,area->y1,area->y2);
+  st7789_tft_range_set(area->x1,area->x2,area->y1,area->y2);
   
   uint16_t *p = (uint16_t *)px_map;
   uint32_t count = (area->x2 - area->x1 + 1) * (area->y2 - area->y1 + 1);
   for (uint32_t i = 0; i < count; i++)
   {
-      tft_color_set(p[i]);
+      st7789_tft_color_set(p[i]);
   }
   lv_display_flush_ready(disp);
 }
@@ -25,7 +25,7 @@ void my_lv_display_flush_cb_t(lv_display_t * disp, const lv_area_t * area, uint8
 // 其像素格式和尺寸(creating_a_display)；
 // 应在何处为其渲染像素(draw_buffers)；
 // 如何将那些渲染好的像素发送给它(flush_callback)。
-void my_lvgl_port_init()
+void my_lvgl_port_init(const tft_sizetypedef * tft)
 {
     lv_init();
 
@@ -33,7 +33,7 @@ void my_lvgl_port_init()
     lv_tick_set_cb(my_tick_get_cb);
 
     //内存
-    lv_display_t * disp = lv_display_create(TFT_W, TFT_H);//水平像素240，垂直像素284
+    lv_display_t * disp = lv_display_create(tft->TFT_W, tft->TFT_H);//水平像素240，垂直像素284
     lv_display_set_buffers(disp, draw_buf, 0, sizeof(draw_buf),LV_DISPLAY_RENDER_MODE_PARTIAL);
 
     // 其像素格式和尺寸(creating_a_display)；

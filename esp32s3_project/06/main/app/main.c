@@ -1,4 +1,5 @@
-#include "sys.h"
+#include "freertos/FreeRTOS.h"    /* pdMS_TO_TICKS / portTICK_PERIOD_MS 这些宏在这 */
+#include "freertos/task.h"        /* vTaskDelay / xTaskCreate 这些函数在这 */
 
 void app_main(void)
 {

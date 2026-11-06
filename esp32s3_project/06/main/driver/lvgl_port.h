@@ -3,7 +3,7 @@
 
 void ui_show();
 void task_lvgl_init();
-void my_lvgl_port_init();
+void my_lvgl_port_init(const tft_sizetypedef * tft);
 void image_show(const lv_image_dsc_t *imagestruct);
 
 #endif

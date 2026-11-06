@@ -1,4 +1,8 @@
-#include "sys.h"
+#include "board.h"
+
+#define     ws2812_r    1
+#define     ws2812_g    2
+#define     ws2812_b    3
 
 /*最小为10ns*/
 void ws2812_ns_delay(unsigned int ns)
@@ -23,20 +27,20 @@ void ws2812_ms_delay(unsigned long ms)
 void ws2812_gpio_init()
 {
     gpio_config_t gpio_struct;
-    gpio_struct.pin_bit_mask = (1ULL << ws2812_i);
+    gpio_struct.pin_bit_mask = (1ULL << ws2812);
     gpio_struct.mode = GPIO_MODE_OUTPUT;
     gpio_config(&gpio_struct);
 
-    set_ws2812(0);
+    ws2812_writebit(0);
 
 }
 
 //T1H 580ns~1us高 T1L 220ns~420ns低
 void ws_2812_set1()
 {
-    set_ws2812(1);
+    ws2812_writebit(1);
     ws2812_ns_delay(180);
-    set_ws2812(0);
+    ws2812_writebit(0);
     __asm__ volatile("nop"); __asm__ volatile("nop");
     __asm__ volatile("nop"); __asm__ volatile("nop");
     __asm__ volatile("nop"); __asm__ volatile("nop");
@@ -48,21 +52,21 @@ void ws_2812_set1()
 //T0H 220ns~380ns高 T0L 580ns~1us低
 void ws_2812_set0()
 {
-    set_ws2812(1);
+    ws2812_writebit(1);
     __asm__ volatile("nop"); __asm__ volatile("nop");
     __asm__ volatile("nop"); __asm__ volatile("nop");
     __asm__ volatile("nop"); __asm__ volatile("nop");
     __asm__ volatile("nop"); __asm__ volatile("nop");
     __asm__ volatile("nop"); __asm__ volatile("nop");
     __asm__ volatile("nop"); __asm__ volatile("nop");
-    set_ws2812(0);
+    ws2812_writebit(0);
     ws2812_ns_delay(180);
    
 }
 
 void WS_2812_set(unsigned char r,unsigned char g,unsigned char b)
 {
-    set_ws2812(0);
+    ws2812_writebit(0);
     vTaskDelay(pdMS_TO_TICKS(1));
     for(unsigned char i = 0; i < 8; i++)
     {
@@ -97,6 +101,6 @@ void WS_2812_set(unsigned char r,unsigned char g,unsigned char b)
             ws_2812_set0();
         }
     }
-    set_ws2812(0);
+    ws2812_writebit(0);
     vTaskDelay(pdMS_TO_TICKS(1)); 
 }
