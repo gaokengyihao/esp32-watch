@@ -1,4 +1,3 @@
-#include "board.h"
 #include "p183b001_v4_ctp.h"
 
 /*屏参数*/

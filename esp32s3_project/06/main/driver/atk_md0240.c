@@ -1,4 +1,3 @@
-#include "board.h"
 #include "atk_md0240.h"
 
 /*屏参数*/
@@ -23,6 +22,8 @@ void atk_md0240_gpio_init()
 
 void atk_md0240_init()
 {
+    xl9555struct_DeInit();
+
     PWR_writebit(1);
     
     dc_writebit(0);
