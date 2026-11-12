@@ -39,7 +39,7 @@
   "idf.openOcdConfigs": [
     "board/esp32s3-builtin.cfg"
   ],
-  "idf.port": "COM14",
+  "idf.port": "COM9",
   "idf.flashType": "JTAG",
   "idf.flashBaudRate": "460800",
   "idf.monitorBaudRate": "115200",
@@ -49,6 +49,6 @@
   "clangd.arguments": [
     "--background-index",
     "--query-driver=**",
-    "--compile-commands-dir=d:\\esp32\\esp32s3_project\\05\\build"
+    "--compile-commands-dir=d:\\esp32\\esp32s3_project\\06\\build"
   ]
 }

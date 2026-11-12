@@ -1,4 +1,13 @@
-#include "sys.h"
+#include "freertos/FreeRTOS.h"    /* pdMS_TO_TICKS / portTICK_PERIOD_MS 这些宏在这 */
+#include "freertos/task.h"  
+
+#include "atk_md0240.h"
+#include "p183b001_v4_ctp.h"
+#include "lvgl_port.h"
+
+#include "ws2812.h"
+#include "bluetooth.h"
+#include "ui.h"
 
 unsigned int number;
 
@@ -29,26 +38,16 @@ void lvgl_task(void *arg)
 {
     vTaskDelay(pdMS_TO_TICKS(500));
 
-    /*板子引脚初始化*/
-    board_init();
+    /*tft*/
+    // atk_md0240_init();
+    p183b001_v4_ctp_init();
 
-    /*显示部分*/
-    tft_show_init();
-
-    /*触摸部分*/
-    // tft_touch_init();
-
-    /*lvgl部分*/
-    my_lvgl_port_init();
-
-    /*ui部分*/
-    // ui_show();
-    image_show(&gaokengstruct);
+    /*ui*/
+    ui_init();
 
     while (1)
     {
-        lv_timer_handler();
-        // tft_iic_read();
+        ui_scan();
         vTaskDelay(pdMS_TO_TICKS(10));
     }
 }

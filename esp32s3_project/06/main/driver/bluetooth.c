@@ -18,6 +18,8 @@
 
 #include "ble_uart.h"
 
+#include "ota.h" 
+
 static const char *TAG = "app";
 
 static void ble_uart_on_rx(const uint8_t *data, size_t len)
@@ -59,8 +61,6 @@ void bluetooth_init()
         .device_name    = name,
         .ble_uart_on_rx = ble_uart_on_rx,
     }));
-
-    ESP_ERROR_CHECK(ble_uart_open());
 
     ESP_ERROR_CHECK(ble_uart_open());
 
