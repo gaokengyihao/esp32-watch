@@ -19,6 +19,21 @@ void st7789_tft_spi_send(unsigned char type,unsigned char byte)
     
 }
 
+void st7789_tft_spi_sendbuf(unsigned char type, uint8_t *sendbuf, uint16_t sendbuf_length)
+{
+    if (type)
+    {
+        dc_writebit(1);
+    }
+    else
+    {
+        dc_writebit(0);
+    }
+
+    spi_sendbuf(sendbuf, sendbuf_length);
+    
+}
+
 /*tft屏 上电初始化命令*/
 void st7789_init()
 {

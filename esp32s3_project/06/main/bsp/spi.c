@@ -21,9 +21,8 @@ void spi_gpio_init()
     spi_initstruct.data6_io_num = -1;
     spi_initstruct.data7_io_num = -1;
     spi_initstruct.data_io_default_level = 0;
-    spi_initstruct.max_transfer_sz = 4096;//最大传输字节
+    spi_initstruct.max_transfer_sz = 240 * 40 * 2;//最大传输字节 //cpu为64字节 //dma可将数组全发
     spi_initstruct.dma_burst_size = 0;//默认每次搬32字节
-    spi_initstruct.isr_cpu_id = SPI_DMA_DISABLED;//失能dma调用硬件spi
     spi_initstruct.intr_flags = 0;//中断优先级
     spi_bus_initialize(SPI2_HOST, &spi_initstruct, SPI_DMA_CH_AUTO);
 
@@ -32,7 +31,7 @@ void spi_gpio_init()
     spi_devicestruct.queue_size = 4;//最多事务排队数量
     spi_devicestruct.clock_speed_hz = 80*1000*1000;
     spi_devicestruct.spics_io_num = tft_spi_cs_bit;
-    spi_bus_add_device(SPI2_HOST, &spi_devicestruct, spi_handle);
+    spi_bus_add_device(SPI2_HOST, &spi_devicestruct, &spi_handle);
 
     /*软件spi配置*/
     // gpio_config_t gpio_struct = {0};
@@ -74,23 +73,42 @@ void spi_sendbit(unsigned char bit)
 // }
 
 /*硬件spi*/
-
 void spi_sendbyte(unsigned char byte)
 {
-    spi_transaction_t spi_sendtruct;
+    spi_transaction_t spi_sendtruct = {0};
+    spi_sendtruct.flags = SPI_TRANS_USE_TXDATA;
     spi_sendtruct.length = 8;
     spi_sendtruct.tx_data[0] = byte;
-
+    
     spi_device_polling_transmit(spi_handle, &spi_sendtruct);
 }
 
+// void spi_sendbuf(uint8_t *sendbuf, uint16_t sendbuf_length)
+// {
+//     uint16_t length = sendbuf_length;//需发送的总字节数
+//     uint16_t n;//当次发送字节数
+//     uint8_t * p = sendbuf;//指向当前发送部分
+
+//     while(length > 0)//发送完成后退出
+//     {
+//         n = (length > 64) ? 64 : length;//限制最大64字节
+
+//         spi_transaction_t spi_sendtruct = {0};
+//         spi_sendtruct.length = n * 8;
+//         spi_sendtruct.tx_buffer = p;
+//         spi_device_polling_transmit(spi_handle, &spi_sendtruct);
+
+//         length -= n;//减去已发送字节
+//         p += n;//指向上次发送部分
+//     }
+    
+// }
+
+/*硬件spi+dma*/
 void spi_sendbuf(uint8_t *sendbuf, uint16_t sendbuf_length)
 {
-    
-
-    spi_transaction_t spi_sendtruct;
+    spi_transaction_t spi_sendtruct = {0};
     spi_sendtruct.length = sendbuf_length * 8;
     spi_sendtruct.tx_buffer = sendbuf;
-
     spi_device_polling_transmit(spi_handle, &spi_sendtruct);
 }

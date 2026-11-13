@@ -7,7 +7,9 @@
 #include "st7789.h"
 #include "p183b001_v4_ctp.h"
 
-static uint8_t draw_buf[240 * 40 * 2];      //atk_md0240
+static uint8_t draw_buf[240 * 40 * 2] __attribute__((aligned(4)));//硬件spi+dma，dma要求源地址为4的倍数
+// static uint8_t draw_buf[240 * 40 * 2];      //atk_md0240
+
 // static uint8_t draw_buf[320 * 40 * 2];   //p183b001_v4_ctp
 
 lv_indev_t * input_indev;//输入设备指针
@@ -42,9 +44,11 @@ void my_lv_display_flush_cb_t(lv_display_t * disp, const lv_area_t * area, uint8
     st7789_tft_range_set(area->x1,area->x2,area->y1,area->y2);
     uint32_t count = (area->x2 - area->x1 + 1) * (area->y2 - area->y1 + 1);
 
+    lv_draw_rgb565_swap(px_map, count);//px_map 是 LVGL 的 RGB565 小端数据，ST7789 要高位在前。
+
     /*数组大小*/
-    uint16_t length = sizeof((uint16_t *)px_map);
-    spi_sendbuf(px_map, length);
+    uint16_t length = count * 2;
+    st7789_tft_spi_sendbuf(Parameter, px_map, length);
 
     /*通知lvgl发送完成*/
     lv_display_flush_ready(disp);
@@ -87,6 +91,8 @@ static lv_obj_t * obj_create(lv_obj_t * parent,int32_t w,int32_t h,int32_t x,int
     lv_obj_set_style_border_width(obj, 0, 0);//去掉边框显示
     lv_obj_set_style_radius(obj, 0, 0);//设置每个角落的半径
 
+    lv_obj_set_scrollable(obj, false);//去掉滑动功能
+
     return obj;
 }
 
@@ -101,6 +107,8 @@ static lv_obj_t * image_create(lv_obj_t * parent,const lv_image_dsc_t * image_st
 
     lv_image_set_inner_align(image, LV_IMAGE_ALIGN_STRETCH);//图片自动缩放到框的大小
     
+    lv_obj_set_scrollable(image, false);//去掉滑动功能
+
     return image;
 }
 
@@ -114,9 +122,11 @@ static lv_obj_t * label_create(lv_obj_t * parent,char * text)
                                 LV_FLEX_ALIGN_CENTER);
     lv_obj_set_style_pad_row(parent, 6, 0); 
 
+    lv_obj_set_scrollable(label, false);//去掉滑动功能
+
     /*字体颜色*/
     lv_obj_set_style_text_color(label, lv_color_hex(0xE6EDF7), 0);
-
+    
     return label;
 }
 
@@ -158,6 +168,8 @@ void page1_show()
     //子类  框4
     lv_obj_t * obj4 = obj_create(parent, 50, 50, 120, 141);
 
+    lv_obj_set_scrollable(page1, false);//去掉滑动功能
+
     /*加载页面*/
     lv_screen_load(page1);
 }
@@ -168,7 +180,7 @@ void page2_show()
 
     image_show(page2,&gaokengstruct);
 
-    lv_obj_remove_flag(page2, LV_OBJ_FLAG_SCROLLABLE);//
+    lv_obj_set_scrollable(page2, false);//去掉滑动功能
 
     lv_screen_load(page2);
 }
@@ -246,4 +258,3 @@ void slide()
             break;
     }
 }
-

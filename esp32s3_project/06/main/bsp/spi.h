@@ -1,6 +1,8 @@
 #ifndef     _SPI_H_
 #define     _SPI_H_
 
+#include <stdint.h>
+
 /*软件spi*/
 void spi_gpio_init();
 void spi_sendbit(unsigned char bit);
@@ -8,6 +10,9 @@ void spi_sendbit(unsigned char bit);
 
 /*硬件*/
 void spi_sendbyte(unsigned char byte);
+// void spi_sendbuf(uint8_t *sendbuf, uint16_t sendbuf_length);
+
+/*硬件spi+dma*/
 void spi_sendbuf(uint8_t *sendbuf, uint16_t sendbuf_length);
 
 /*spi*/

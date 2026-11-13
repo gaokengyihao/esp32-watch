@@ -35,5 +35,7 @@ void st7789_init();
 void st7789_tft_color_set(uint16_t color);
 void st7789_tft_range_set(uint16_t x_start,uint16_t x_end,uint16_t y_start,uint16_t y_end);
 void st7789_tft_set(uint16_t x_start,uint16_t x_end,uint16_t y_start,uint16_t y_end,uint16_t color);
+void st7789_tft_spi_sendbuf(unsigned char type, uint8_t *sendbuf, uint16_t sendbuf_length);
+
 
 #endif
