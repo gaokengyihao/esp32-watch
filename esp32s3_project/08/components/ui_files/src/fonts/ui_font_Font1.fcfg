@@ -1,0 +1,16 @@
+{
+  "codename": "Font1",
+  "ttf_path": "/assets/fonts/cn_subset.ttf",
+  "bin_path": "/assets/fonts\\ui_font_Font1.bin",
+  "c_path": "/assets/fonts\\ui_font_Font1.c",
+  "cfg_path": "/assets/fonts\\ui_font_Font1.fcfg",
+  "size": 16,
+  "bpp": 1,
+  "letters": 0,
+  "ranges": [
+    "0x20-0x7f"
+  ],
+  "symbols": "°：今日步数温湿度心率血氧电量时间日期天气设置日历计算器秒表卡包",
+  "customparams": "--no-compress --no-prefilter",
+  "uploaded": false
+}

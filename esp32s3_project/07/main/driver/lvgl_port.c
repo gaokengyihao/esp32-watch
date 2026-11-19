@@ -1,6 +1,8 @@
 #include "lvgl.h"
 #include "lvgl_port.h"
 
+#include "ui.h"
+
 #include "esp_timer.h"//esp32 
 
 #include "image/image.h"
@@ -262,17 +264,31 @@ void slide()
 
     switch(lv_indev_get_gesture_dir(input_indev))
     {
+        // case next:
+        //     if(now != page1)
+        //     {
+        //         lv_screen_load_anim(page1,LV_SCREEN_LOAD_ANIM_OVER_LEFT,10,0,false);
+        //     }
+        //     break;
+
+        // case back:
+        //     if(now != page2)
+        //     {
+        //         lv_screen_load_anim(page2,LV_SCREEN_LOAD_ANIM_OVER_RIGHT,10,0,false);
+        //     }
+        //     break;
+
         case next:
-            if(now != page1)
+            if(now != ui_main_ui)
             {
-                lv_screen_load_anim(page1,LV_SCREEN_LOAD_ANIM_OVER_LEFT,10,0,false);
+                lv_screen_load_anim(ui_main_ui,LV_SCREEN_LOAD_ANIM_OVER_LEFT,10,0,false);
             }
             break;
 
         case back:
-            if(now != page2)
+            if(now != ui_calendar)
             {
-                lv_screen_load_anim(page2,LV_SCREEN_LOAD_ANIM_OVER_RIGHT,10,0,false);
+                lv_screen_load_anim(ui_calendar,LV_SCREEN_LOAD_ANIM_OVER_RIGHT,10,0,false);
             }
             break;
 

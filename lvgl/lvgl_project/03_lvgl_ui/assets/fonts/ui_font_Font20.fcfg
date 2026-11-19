@@ -1,0 +1,16 @@
+{
+  "codename": "Font20",
+  "ttf_path": "/assets/fonts/cn_subset.ttf",
+  "bin_path": "/assets/fonts\\\\ui_font_Font20.bin",
+  "c_path": "/assets/fonts\\\\ui_font_Font20.c",
+  "cfg_path": "/assets/fonts\\\\ui_font_Font20.fcfg",
+  "size": 20,
+  "bpp": 4,
+  "letters": 0,
+  "ranges": [
+    "0x20-0x7f"
+  ],
+  "symbols": "°：东交亮今位停关写分包北单南卡历压向器园在复天始密层屏常度开心息手抬拔择指改数方日时期校楼次止正步气氧测海温湿率电码禁秒算米置菜血表西计设选通量针门间",
+  "customparams": "--no-compress --no-prefilter",
+  "uploaded": false
+}

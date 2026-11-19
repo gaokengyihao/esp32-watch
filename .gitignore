@@ -42,3 +42,8 @@
 **/desktop.ini
 **/*.log
 **/__pycache__/
+
+# ---- SquareLine Studio installer / install dir (not in Git) ----
+/lvgl/SquareLine Studio 1.6.3/
+/lvgl/SquareLine_Studio_Windows_v1_6_3/
+/lvgl/SquareLine_Studio_Windows_v1_6_3.zip

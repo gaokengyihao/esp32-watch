@@ -1,0 +1,16 @@
+{
+  "codename": "Font80",
+  "ttf_path": "/assets/fonts/cn_subset.ttf",
+  "bin_path": "/assets/fonts\\\\ui_font_Font80.bin",
+  "c_path": "/assets/fonts\\\\ui_font_Font80.c",
+  "cfg_path": "/assets/fonts\\\\ui_font_Font80.fcfg",
+  "size": 80,
+  "bpp": 4,
+  "letters": 0,
+  "ranges": [
+    "0x30-0x39"
+  ],
+  "symbols": "",
+  "customparams": "--no-compress --no-prefilter",
+  "uploaded": false
+}

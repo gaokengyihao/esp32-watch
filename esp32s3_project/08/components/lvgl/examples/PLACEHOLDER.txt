@@ -1,0 +1,1 @@
+Placeholder directory (do not delete). Required by ESP-IDF component build; the LVGL lite package does not include examples.

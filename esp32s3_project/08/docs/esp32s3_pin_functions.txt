@@ -1,0 +1,147 @@
+﻿ESP32-S3 IO MUX 引脚功能表
+来源: C:\esp\v6.1-beta1\esp-idf\components\soc\esp32s3\register\soc\io_mux_reg.h
+说明: Num 是 IO MUX 功能编号, 0~4 (0/1 通常都是普通 GPIO)
+==================================================
+
+GPIO0:
+    func 0 = GPIO0_0
+    func 1 = GPIO0
+
+GPIO1:
+    func 0 = GPIO1_0
+    func 1 = GPIO1
+
+GPIO2:
+    func 0 = GPIO2_0
+    func 1 = GPIO2
+
+GPIO3:
+    func 0 = GPIO3_0
+    func 1 = GPIO3
+
+GPIO4:
+    func 0 = GPIO4_0
+    func 1 = GPIO4
+
+GPIO5:
+    func 0 = GPIO5_0
+    func 1 = GPIO5
+
+GPIO6:
+    func 0 = GPIO6_0
+    func 1 = GPIO6
+
+GPIO7:
+    func 0 = GPIO7_0
+    func 1 = GPIO7
+
+GPIO8:
+    func 0 = GPIO8_0
+    func 1 = GPIO8
+    func 3 = SUBSPICS1
+
+GPIO9:
+    func 0 = GPIO9_0
+    func 1 = GPIO9
+    func 3 = SUBSPIHD
+    func 4 = FSPIHD
+
+GPIO10:
+    func 0 = GPIO10_0
+    func 1 = GPIO10
+    func 2 = FSPIIO4
+    func 3 = SUBSPICS0
+    func 4 = FSPICS0
+
+GPIO11:
+    func 0 = GPIO11_0
+    func 1 = GPIO11
+    func 2 = FSPIIO5
+    func 3 = SUBSPID
+    func 4 = FSPID
+
+GPIO12:
+    func 0 = GPIO12_0
+    func 1 = GPIO12
+    func 2 = FSPIIO6
+    func 3 = SUBSPICLK
+    func 4 = FSPICLK
+
+GPIO13:
+    func 0 = GPIO13_0
+    func 1 = GPIO13
+    func 2 = FSPIIO7
+    func 3 = SUBSPIQ
+    func 4 = FSPIQ
+
+GPIO14:
+    func 0 = GPIO14_0
+    func 1 = GPIO14
+    func 2 = FSPIDQS
+    func 3 = SUBSPIWP
+    func 4 = FSPIWP
+
+GPIO19:
+    func 0 = GPIO19_0
+    func 1 = GPIO19
+    func 2 = U1RTS
+    func 3 = CLK_OUT2
+
+GPIO20:
+    func 0 = GPIO20_0
+    func 1 = GPIO20
+    func 2 = U1CTS
+    func 3 = CLK_OUT1
+
+GPIO21:
+    func 0 = GPIO21_0
+    func 1 = GPIO21
+
+GPIO33:
+    func 0 = GPIO33_0
+    func 1 = GPIO33
+    func 2 = FSPIHD
+    func 3 = SUBSPIHD
+    func 4 = SPIIO4
+
+GPIO34:
+    func 0 = GPIO34_0
+    func 1 = GPIO34
+    func 2 = FSPICS0
+    func 3 = SUBSPICS0
+    func 4 = SPIIO5
+
+GPIO35:
+    func 0 = GPIO35_0
+    func 1 = GPIO35
+    func 2 = FSPID
+    func 3 = SUBSPID
+    func 4 = SPIIO6
+
+GPIO36:
+    func 0 = GPIO36_0
+    func 1 = GPIO36
+    func 2 = FSPICLK
+    func 3 = SUBSPICLK
+    func 4 = SPIIO7
+
+GPIO37:
+    func 0 = GPIO37_0
+    func 1 = GPIO37
+    func 2 = FSPIQ
+    func 3 = SUBSPIQ
+    func 4 = SPIDQS
+
+GPIO38:
+    func 0 = GPIO38_0
+    func 1 = GPIO38
+    func 2 = FSPIWP
+    func 3 = SUBSPIWP
+
+GPIO45:
+    func 0 = GPIO45_0
+    func 1 = GPIO45
+
+GPIO46:
+    func 0 = GPIO46_0
+    func 1 = GPIO46

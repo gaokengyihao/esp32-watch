@@ -7,7 +7,7 @@
 
 #include "ws2812.h"
 #include "bluetooth.h"
-#include "ui.h"
+#include "show.h"
 
 unsigned int number;
 
@@ -43,11 +43,11 @@ void lvgl_task(void *arg)
     p183b001_v4_ctp_init();
 
     /*ui*/
-    ui_init();
+    show_init();
 
     while (1)
     {
-        ui_scan();
+        show_scan();
         vTaskDelay(pdMS_TO_TICKS(10));
     }
 }
