@@ -1,0 +1,420 @@
+IIC / 触摸 / XL9555 代码问题记录
+================================
+
+工程：E:\esp32\esp32s3_project\06
+记录时间：2026-11-12
+
+先说明一个关键点：
+    你现在的 main/bsp/iic.c 不是“硬件 I2C 外设”，
+    而是用 GPIO 模拟的软件 I2C（bit-bang）。
+    如果你说的“硬件 IIC”是指用 ESP32-S3 的 I2C 外设，
+    那需要整体换成 driver/i2c_master.h 的写法，见最后一部分。
+
+
+一、最优先改：SCL 等待没有超时，可能卡死
+----------------------------------------
+文件：main/bsp/iic.c
+
+问题：
+    下面这些 while 都在等 SCL 变高：
+        iic.c:26   iic_start()
+        iic.c:42   iic_stop()
+        iic.c:55   iic_ack()
+        iic.c:65   iic_nack()
+        iic.c:89   iic_write_byte()
+        iic.c:98   iic_write_byte() 的 ACK 位
+        iic.c:126  iic_read_byte()
+
+    如果 SCL 被从机拉住（clock stretching 一直不放），
+    或者 SCL 线断了/被拉低，程序会永远停在这个 while 里。
+    这段代码又是在 LVGL 任务里调用，表现就是：
+    屏幕卡住、触摸无反应，严重时看门狗复位。
+
+建议：
+    加一个超时计数，例如：
+
+        #define IIC_TIMEOUT_CNT  1000
+
+        static bool iic_wait_scl_high(void)
+        {
+            uint32_t n = 0;
+            while (!gpio_get_level(iic_scl)) {
+                if (++n > IIC_TIMEOUT_CNT) {
+                    return false;
+                }
+                esp_rom_delay_us(1);
+            }
+            return true;
+        }
+
+    然后把 start/stop/ack/write/read 里的 while 都替换掉。
+    超时后要返回错误，不能继续假装读写成功。
+    为了能返回错误，建议把：
+        void iic_start(void)
+        void iic_stop(void)
+    改成：
+        bool iic_start(void)
+        bool iic_stop(void)
+    或者 esp_err_t。
+
+注意：
+    不要只在 while 里加一个 break 就完事，
+    因为超时后总线状态已经不对，最好做一次总线恢复
+    （见下面“总线恢复”）。
+
+
+二、iic_stop() 结束后 SCL 还是低电平
+------------------------------------
+文件：main/bsp/iic.c:35-48
+
+当前最后两句是：
+        iic_scl_writebit(0);   // iic.c:46
+        iic_sda_writebit(1);   // iic.c:47
+
+问题：
+    STOP 条件本身是 SCL 高时 SDA 由低变高。
+    停止后总线空闲应该是：SCL=1、SDA=1。
+    现在 stop 结束后又把 SCL 拉低，总线不是标准空闲状态。
+    下一次 start 虽然可能还能工作，但容易让从机状态异常，
+    也可能影响同一条总线上的其他设备。
+
+建议：
+    STOP 完成后保持 SCL 高、SDA 高：
+
+        iic_sda_writebit(1);
+        esp_rom_delay_us(2);
+        iic_scl_writebit(1);   // 空闲：SCL=1
+        iic_sda_writebit(1);   // 空闲：SDA=1
+
+    也就是删掉现在 iic.c:46 的 SCL=0。
+
+
+三、p183b001_v4_ctp.c 的 debug 宏写错了
+---------------------------------------
+文件：main/bsp/p183b001_v4_ctp.c:59
+
+当前：
+        #define debug   0
+
+后面用的是：
+        #ifdef debug
+        ...
+        #endif
+
+问题：
+    #ifdef 只判断“有没有定义”，不判断值是 0 还是 1。
+    因为 debug 已经定义了，所以 #ifdef debug 永远为真。
+    也就是说你写 debug=0，调试打印和 ACK 检查其实仍然会编译并执行。
+
+建议：
+    要么改成：
+        #if debug
+
+    要么不用 debug 宏，直接保留必要的 ACK 检查。
+    这里建议用 #if debug，并且把真正的错误检查放到正常路径里，
+    不要只在 debug 为真时才检查 ACK。
+
+
+四、ACK/NACK 没有检查，设备没响应也继续读写
+--------------------------------------------
+文件：main/bsp/iic.c:72-109
+文件：main/bsp/p183b001_v4_ctp.c:65-108
+文件：main/bsp/xl9555.c:50-118
+
+问题：
+    iic_write_byte() 返回值含义：
+        0 = 收到 ACK
+        1 = 收到 NACK
+
+    但是：
+    - p183 普通路径里直接 iic_write_byte(address_write)，不看返回值；
+    - 写寄存器地址 0x02 也不看返回值；
+    - 读地址 0x2B 也不看返回值；
+    - xl9555 的写配置、写输出也完全不看返回值。
+
+    如果触摸/XL9555 没接好、地址错、总线被拉低，
+    程序仍然继续读 6 个字节，读到的可能是 0xFF 或随机值，
+    表现就是触摸坐标乱跳/不响应。
+
+建议：
+    每次写地址、写寄存器、写数据都检查：
+
+        if (iic_write_byte(address_write)) {
+            iic_stop();
+            return;              // 或返回错误码
+        }
+
+        if (iic_write_byte(0x02)) {
+            iic_stop();
+            return;
+        }
+
+        iic_start();
+        if (iic_write_byte(address_read)) {
+            iic_stop();
+            return;
+        }
+
+    XL9555 里也一样：
+        if (iic_write_byte(xl955_address_write)) { iic_stop(); return; }
+        if (iic_write_byte(reg)) { iic_stop(); return; }
+        if (iic_write_byte(value)) { iic_stop(); return; }
+
+    最好让 iic_xxx 返回 bool/esp_err_t，
+    不要只返回一个“数据字节”，错误和数据混在一起。
+
+
+五、IIC 总线没有恢复机制
+-------------------------
+文件：main/bsp/iic.c
+
+问题：
+    如果从机在传输中途复位，或者 SDA 被从机一直拉低，
+    下一次 iic_start() 可能根本发不出起始信号。
+    现在没有“总线恢复”代码，只能断电重启。
+
+建议：
+    在 iic_gpio_init() 末尾或每次 start 前检查：
+        SDA 是否为低？
+    如果 SDA 一直低，手动发 9 个 SCL 时钟，
+    让从机把剩余字节吐完，然后发 STOP：
+
+        释放 SDA；
+        for (i = 0; i < 9; i++) {
+            SCL = 0; delay;
+            SCL = 1; delay;
+        }
+        发 STOP；
+        确认 SDA 回到高。
+
+    这是工业代码里很常见的 I2C bus recovery。
+
+
+六、iic.h 头文件不自包含
+------------------------
+文件：main/bsp/iic.h:16-20
+
+问题：
+    iic.h 里用了：
+        GPIO_NUM_9
+        GPIO_NUM_8
+        gpio_set_level()
+    但是没有包含 driver/gpio.h。
+    目前有些 .c 文件刚好先包含了 driver/gpio.h 才没报错，
+    换个包含顺序就可能编译失败。
+
+建议：
+    在 iic.h 开头加：
+        #include "driver/gpio.h"
+
+    这样头文件自己就能编译，不依赖调用者的包含顺序。
+
+
+七、内部上拉太弱，I2C 可能不稳定
+--------------------------------
+文件：main/bsp/iic.c:11
+
+当前：
+        gpio_struct.pull_up_en = GPIO_PULLUP_ENABLE;
+
+问题：
+    ESP32-S3 内部上拉大约几十 kΩ，只适合很低速、短线的 I2C。
+    你的触摸和 XL9555 如果跑 200~400kHz，或者排线较长，
+    上升沿会变慢，容易出现 ACK 丢失、读 0xFF、偶发死机。
+
+建议：
+    确认板子上 SDA/SCL 是否有外部 4.7kΩ 上拉到 3.3V。
+    如果没有，补 4.7kΩ（或 2.2kΩ，取决于总线上拉要求）。
+    内部上拉可以保留，但不能代替外部上拉。
+
+
+八、XL9555 初始化顺序问题
+-------------------------
+文件：main/bsp/xl9555.c:30-38
+文件：main/bsp/xl9555.c:86-118
+文件：main/bsp/atk_md0240.c:22-27
+
+问题：
+    xl9555struct 是全局变量，默认全 0。
+    如果没有先调用 xl9555struct_DeInit()，
+    直接调用 xl9555_writebit()，会出现：
+        Output_Port_1 初始为 0
+        写 bit3 后变成 0x08
+        同端口其他输出位被一起写成 0
+
+    xl9555struct_DeInit() 会把：
+        Configuration_Port_0/1 = 0xFF（输入/高阻）
+        Output_Port_0/1 = 0xFF
+    这样单独改一个 bit 才不会误伤其他引脚。
+
+    atk_md0240.c 里已经调用了：
+        xl9555struct_DeInit();
+        xl9555_io_mode_init(1, 2, 0);
+        xl9555_io_mode_init(1, 3, 0);
+
+    但 p183b001_v4_ctp.c 没有调用 XL9555 初始化。
+    如果 P183 的屏幕电源/复位/背光也经过 XL9555，
+    就必须在 p183b001_v4_ctp_init() 里先做同样的初始化，
+    否则 pwr_writebit() 可能无效，或者把同端口其他输出位拉低。
+
+建议：
+    只要用到 xl9555_writebit()，使用前必须先：
+        xl9555struct_DeInit();
+        xl9555_io_mode_init(...);   // 把要用的引脚设为输出
+        xl9555_writebit(...);
+
+    并确认 P183 原理图：
+        SLCD_PWR / SLCD_RST / 背光 到底是不是接在 XL9555 上。
+
+另外：
+    xl9555.c:40 的 configuration_Port 宏目前没有被使用，
+    如果它是想表示默认配置值，要么用上，要么删掉，避免误解。
+
+
+九、触摸地址和寄存器要再核对
+----------------------------
+文件：main/bsp/p183b001_v4_ctp.c:54-55
+
+当前：
+        address_write 0x2A
+        address_read  0x2B
+    这对应 7 位地址 0x15，CST816 常见地址就是 0x15，基本正确。
+
+    XL9555：
+        xl955_address_write 0x40
+        xl955_address_read  0x41
+    对应 7 位地址 0x20（A2/A1/A0 接地），也要按板子原理图确认。
+
+    p183 从寄存器 0x02 连续读 6 字节：
+        0x02 touch_num
+        0x03 x_high
+        0x04 x_low
+        0x05 y_high
+        0x06 y_low
+        0x07 touch_press
+    这个顺序要和 CST816 手册/你的屏幕型号再对一遍。
+    如果型号不是 CST816，寄存器映射可能不同。
+
+
+十、触摸读取没有清空旧坐标
+--------------------------
+文件：main/bsp/p183b001_v4_ctp.c:99-108
+
+问题：
+    touch_num 为 0（没有触摸）时，x_touch/y_touch 仍然保留上一次的值。
+    如果上层只用 x/y 判断，可能会误判为一直按着。
+
+建议：
+    在读取完成后根据 touch_num 处理：
+        if (touch_num == 0) {
+            x_touch = 0;
+            y_touch = 0;
+        }
+    或者让上层必须同时判断 touch_num。
+
+
+十一、I2C 总线没有互斥保护
+--------------------------
+文件：main/bsp/iic.c
+文件：main/bsp/p183b001_v4_ctp.c
+文件：main/bsp/xl9555.c
+
+问题：
+    触摸读取和 XL9555 写操作共用同一组 SDA/SCL。
+    如果它们在不同任务里调用，一个任务刚发完 START，
+    另一个任务插进来发数据，总线会直接乱掉。
+    现在看起来主要在初始化/LVGL 任务里，暂时可能没暴露，
+    但后面加蓝牙、电源管理、触摸中断后很容易踩到。
+
+建议：
+    如果确定所有 I2C 操作都在同一个任务里，可以暂时不加锁；
+    否则加一个 FreeRTOS mutex，所有 I2C 事务统一走：
+        xSemaphoreTake(iic_mutex, portMAX_DELAY);
+        ... iic_start/write/read/stop ...
+        xSemaphoreGive(iic_mutex);
+
+    加锁范围要覆盖整个事务，不是单个字节。
+
+
+十二、如果要做“真正的硬件 I2C”
+--------------------------------
+当前 iic.c 是软件模拟。如果你想改用 ESP32-S3 的 I2C 外设，
+不要再调用 iic_start/iic_stop/iic_write_byte 这套 GPIO 代码，
+改用 ESP-IDF 的 driver/i2c_master.h（IDF 6.x 新 API）。
+
+大致结构：
+
+    #include "driver/i2c_master.h"
+
+    i2c_master_bus_config_t bus_cfg = {
+        .i2c_port = I2C_NUM_0,
+        .sda_io_num = GPIO_NUM_8,
+        .scl_io_num = GPIO_NUM_9,
+        .clk_source = I2C_CLK_SRC_DEFAULT,
+        .glitch_ignore_cnt = 7,
+        .flags.enable_internal_pullup = true,
+    };
+
+    i2c_master_bus_handle_t bus;
+    ESP_ERROR_CHECK(i2c_new_master_bus(&bus_cfg, &bus));
+
+    // 触摸 CST816，7 位地址 0x15
+    i2c_device_config_t touch_cfg = {
+        .dev_addr_length = I2C_ADDR_BIT_LEN_7,
+        .device_address = 0x15,
+        .scl_speed_hz = 400000,
+    };
+    i2c_master_dev_handle_t touch;
+    ESP_ERROR_CHECK(i2c_master_bus_add_device(bus, &touch_cfg, &touch));
+
+    // XL9555，7 位地址 0x20
+    i2c_device_config_t xl_cfg = {
+        .dev_addr_length = I2C_ADDR_BIT_LEN_7,
+        .device_address = 0x20,
+        .scl_speed_hz = 400000,
+    };
+    i2c_master_dev_handle_t xl9555;
+    ESP_ERROR_CHECK(i2c_master_bus_add_device(bus, &xl_cfg, &xl9555));
+
+读触摸寄存器（先写寄存器地址，再读数据）：
+
+    uint8_t reg = 0x02;
+    uint8_t buf[6];
+    ESP_ERROR_CHECK(i2c_master_transmit_receive(
+        touch, &reg, 1, buf, sizeof(buf), 100));
+
+写 XL9555 寄存器：
+
+    uint8_t data[2] = { reg, value };
+    ESP_ERROR_CHECK(i2c_master_transmit(xl9555, data, sizeof(data), 100));
+
+注意：
+    1. 用硬件 I2C 后，不要再调用 iic_gpio_init() 去把 8/9 配成 GPIO；
+       总线初始化会自己配置引脚。
+    2. 外部 4.7k 上拉仍然需要，内部上拉不能完全代替。
+    3. 硬件 I2C 会自动处理 ACK、时钟拉伸和部分错误，
+       但返回值仍然要检查。
+    4. 先保留软件 I2C 作为对照，改好后把软件 start/stop/read/write
+       全部移除，避免两套代码同时操作同一组引脚。
+    5. 如果 400kHz 不稳定，先降到 100kHz 验证硬件和上拉，
+       再逐步提高。
+
+
+建议修改顺序
+------------
+1. 先给所有 while 等待 SCL 的循环加超时，解决卡死。
+2. 修 iic_stop() 结束后 SCL 保持高电平。
+3. 把 p183 的 #ifdef debug 改成 #if debug。
+4. 所有 iic_write_byte 检查 ACK，失败就 stop 并返回。
+5. 确认 SDA/SCL 外部 4.7k 上拉。
+6. 如果 P183 用 XL9555 控制电源/复位，补 xl9555 初始化。
+7. 最后再决定要不要整体迁移到硬件 I2C 外设。
+
+
+备注
+----
+以上是代码静态检查结果，不代表硬件一定损坏。
+如果改完仍然读不到触摸：
+- 先用万用表/示波器看 SDA/SCL 是否有上拉、是否一直被拉低；
+- 用 i2c 扫描工具确认 0x15 和 0x20 是否能被扫描到；
+- 再检查 P183 的触摸复位、电源、INT 引脚和排线。

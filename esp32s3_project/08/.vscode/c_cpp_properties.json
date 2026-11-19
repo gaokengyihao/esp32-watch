@@ -1,9 +1,11 @@
+// C/C++ 扩展的 IntelliSense 配置，只影响代码提示和跳转。
+// clangd 不读这个文件；如果以后用 clangd，配置在工程根目录的 .clangd。
 {
   "configurations": [
     {
       "name": "ESP-IDF",
       "compilerPath": "",
-      "compileCommands": "${config:idf.buildPath}/compile_commands.json",
+      "compileCommands": "${workspaceFolder}/build/compile_commands.json", // 指向 08 自己的 build，不能用 06/07 的路径
       "intelliSenseMode": "gcc-x86",
       "includePath": [
         "${workspaceFolder}/**"

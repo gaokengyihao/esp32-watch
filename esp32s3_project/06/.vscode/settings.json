@@ -1,54 +1,35 @@
+// VS Code 工作区设置（workspace settings），会被 git 跟踪。
+// 这里只放两台电脑都一样、且不含绝对路径的公共配置。
+// 本机路径（ESP-IDF、工具链、Python、COM 口、clangd.exe）放在 VS Code 用户设置里，
+// 这样公司/宿舍各用自己的路径，拉代码不会互相覆盖。
 {
-  "C_Cpp.intelliSenseEngine": "default",
-  "idf.extensionActivationMode": "always",
-  "cmake.configureOnOpen": false,
-  "cmake.configureOnEdit": false,
-  "cmake.automaticReconfigure": false,
-  "cmake.autoSelectActiveFolder": false,
-  "cmake.options.advanced": {
-    "build": {
-      "statusBarVisibility": "inherit",
-      "inheritDefault": "hidden"
+  "C_Cpp.intelliSenseEngine": "default", // 使用 C/C++ 扩展做代码提示和跳转
+  "idf.extensionActivationMode": "always", // 打开工程就激活 ESP-IDF 扩展
+  "cmake.configureOnOpen": false, // 打开工程时不自动跑 CMake
+  "cmake.configureOnEdit": false, // 修改 CMakeLists 时不自动重配
+  "cmake.automaticReconfigure": false, // 关闭 CMake 自动重配
+  "cmake.autoSelectActiveFolder": false, // 不自动选择 CMake 活动工程
+  "cmake.options.advanced": { // 隐藏 CMake 扩展的状态栏按钮
+    "build": { // Build 按钮
+      "statusBarVisibility": "inherit", // inherit=继承默认显示策略
+      "inheritDefault": "hidden" // 默认隐藏
     },
-    "launch": {
-      "statusBarVisibility": "inherit",
-      "inheritDefault": "hidden"
+    "launch": { // Launch 按钮
+      "statusBarVisibility": "inherit", // inherit=继承默认显示策略
+      "inheritDefault": "hidden" // 默认隐藏
     },
-    "debug": {
-      "statusBarVisibility": "inherit",
-      "inheritDefault": "hidden"
+    "debug": { // Debug 按钮
+      "statusBarVisibility": "inherit", // inherit=继承默认显示策略
+      "inheritDefault": "hidden" // 默认隐藏
     }
   },
-  "idf.eimIdfJsonPath": "C:/Espressif/tools/eim_idf.json",
-  "idf.currentSetup": "C:\\esp\\v6.1-beta1\\esp-idf",
-  "idf.espIdfPath": "C:/esp/v6.1-beta1/esp-idf",
-  "idf.toolsPath": "C:/Espressif/tools",
-  "idf.pythonInstallPath": "C:/Espressif/tools/python/v6.1-beta1/venv/Scripts/python.exe",
-  "idf.pythonBinPath": "C:/Espressif/tools/python/v6.1-beta1/venv/Scripts/python.exe",
-  "idf.adapterTargetName": "esp32s3",
-  "idf.customExtraPaths": "C:/Espressif/tools/ccache/4.12.1/ccache-4.12.1-windows-x86_64;C:/Espressif/tools/cmake/4.0.3/bin;C:/Espressif/tools/dfu-util/0.11/dfu-util-0.11-win64;C:/Espressif/tools/esp-clang/esp-21.1.3_20260408/esp-clang/bin;C:/Espressif/tools/esp-clangd/esp-21.1.3_20260408/esp-clangd/bin;C:/Espressif/tools/esp-rom-elfs/20241011/;C:/Espressif/tools/esp32ulp-elf/2.38_20240113/esp32ulp-elf/bin;C:/Espressif/tools/esp32ulp-elf/2.38_20240113/esp32ulp-elf/esp32ulp-elf/bin;C:/Espressif/tools/idf-exe/1.0.3/;C:/Espressif/tools/ninja/1.12.1/;C:/Espressif/tools/openocd-esp32/v0.12.0-esp32-20260424/openocd-esp32/bin;C:/Espressif/tools/riscv32-esp-elf-gdb/17.1_20260402/riscv32-esp-elf-gdb/bin;C:/Espressif/tools/riscv32-esp-elf/esp-15.2.0_20251204/riscv32-esp-elf/bin;C:/Espressif/tools/riscv32-esp-elf/esp-15.2.0_20251204/riscv32-esp-elf/riscv32-esp-elf/bin;C:/Espressif/tools/xtensa-esp-elf-gdb/17.1_20260402/xtensa-esp-elf-gdb/bin;C:/Espressif/tools/xtensa-esp-elf/esp-15.2.0_20251204/xtensa-esp-elf/bin;C:/Espressif/tools/xtensa-esp-elf/esp-15.2.0_20251204/xtensa-esp-elf/xtensa-esp-elf/bin;C:/Espressif/tools/python/v6.1-beta1/venv/Scripts",
-  "idf.customExtraVars": {
-    "IDF_PATH": "C:/esp/v6.1-beta1/esp-idf",
-    "IDF_TOOLS_PATH": "C:/Espressif/tools",
-    "IDF_PYTHON_ENV_PATH": "C:/Espressif/tools/python/v6.1-beta1/venv",
-    "ESP_ROM_ELF_DIR": "C:/Espressif/tools/esp-rom-elfs/20241011/",
-    "OPENOCD_SCRIPTS": "C:/Espressif/tools/openocd-esp32/v0.12.0-esp32-20260424/openocd-esp32/share/openocd/scripts",
-    "IDF_CCACHE_ENABLE": "1",
-    "ESP_CLANG_LIBS_PATH": "C:/Espressif/tools/esp-clang-libs/esp-21.1.3_20260408/esp-clang/lib"
-  },
-  "idf.openOcdConfigs": [
-    "board/esp32s3-builtin.cfg"
+  "idf.adapterTargetName": "esp32s3", // 目标芯片：ESP32-S3
+  "idf.openOcdConfigs": [ // OpenOCD 使用的板级配置
+    "board/esp32s3-builtin.cfg" // ESP32-S3 内置 USB-JTAG
   ],
-  "idf.port": "COM9",
-  "idf.flashType": "JTAG",
-  "idf.flashBaudRate": "460800",
-  "idf.monitorBaudRate": "115200",
-  "idf.saveBeforeBuild": true,
-  "idf.enableCCache": true,
-  "clangd.path": "C:\\Espressif\\tools\\esp-clangd\\esp-21.1.3_20260408\\esp-clangd\\bin\\clangd.exe",
-  "clangd.arguments": [
-    "--background-index",
-    "--query-driver=**",
-    "--compile-commands-dir=d:\\esp32\\esp32s3_project\\06\\build"
-  ]
+  "idf.flashBaudRate": "460800", // 烧录波特率，必须是字符串
+  "idf.monitorBaudRate": "115200", // 串口监视器波特率
+  "idf.saveBeforeBuild": true, // 编译前自动保存
+  "idf.enableCCache": true, // 启用 ccache 加速重复编译
+  "C_Cpp.default.compileCommands": "${workspaceFolder}/build/compile_commands.json" // C/C++ 扩展的编译数据库；用相对路径，两台电脑通用
 }

@@ -78,8 +78,8 @@ typedef enum
 
 typedef struct 
 {
-    double calculated_value,calculated_tempvalue1,calculated_tempvalue2;
-    uint8_t Operator;
+    double calculated_value, calculated_tempvalue1, calculated_tempvalue2;
+    uint8_t Operator, last_keynum, keynum_count;//第一次上电后赋值
 }calculatorstructtypedef;
 
 calculatorstructtypedef calculatorstruct;
@@ -203,15 +203,44 @@ void gesture_init()
     lv_obj_add_event_cb(ui_card_pack, gesture_cb, LV_EVENT_GESTURE, (void *)(uintptr_t)PAGE_CARD_PACK);
 }
 
+/*按键类型判断*/
+uint8_t calculator_typejudge(uint8_t id)
+{
+    uint8_t btn_type = 0;
+    /*计算器*/
+    if(id >= BTN_ID_CALC_0 && id <= BTN_ID_CALC_9){btn_type = 1;}
+    if(id == BTN_ID_CALC_DOT){btn_type = 2;}
+    if(id >= BTN_ID_CALC_ADD && id <= BTN_ID_CALC_EQ){btn_type = 3;}
+
+    return btn_type;
+}
+
 /*lvgl按键回调函数*/
 static void btn_test_cb(lv_event_t *e)
 {
     if (lv_event_get_code(e) == LV_EVENT_CLICKED)//按键按下
     {
         btn_id_t id = (btn_id_t)(uintptr_t) lv_event_get_user_data(e);//获取当前按键
+        uint8_t key_type = calculator_typejudge(id);
+        {
+            switch (key_type)
+            {
+                case 1:
+                    lv_label_set_text_fmt(ui_calc_value, "%f", calculatorstruct.calculated_value);
+                    break;
+                
+                default:
+                    break;
+            }
+        }
         menu1_function(id);
-        
+
     }
+}
+
+void calculatorstruct_init()
+{
+    calculatorstruct.last_keynum = 1;
 }
 
 /*按键事件、id注册*/
@@ -241,6 +270,8 @@ void btn_init()
     lv_obj_add_event_cb(ui_calc_div,btn_test_cb,LV_EVENT_CLICKED,(void *)(uintptr_t)BTN_ID_CALC_DIV);
     lv_obj_add_event_cb(ui_calc_eq,btn_test_cb,LV_EVENT_CLICKED,(void *)(uintptr_t)BTN_ID_CALC_EQ);
     lv_obj_add_event_cb(ui_calc_C,btn_test_cb,LV_EVENT_CLICKED,(void *)(uintptr_t)BTN_ID_CALC_C);
+
+    calculatorstruct_init();
 }
 
 /*菜单1功能*/
@@ -288,43 +319,60 @@ void menu1_function(btn_id_t id)
 //     BTN_ID_CALC_C = 38,
 // double calculated_value,calculated_tempvalue1,calculated_tempvalue2;
 
+void calculator_num(btn_id_t id)
+{
+    id -= 22;
+    switch (calculatorstruct.Operator)
+    {
+        case BTN_ID_CALC_ADD:
+            calculatorstruct.calculated_value += id;
+            break;
+        
+        case BTN_ID_CALC_SUB:
+            calculatorstruct.calculated_value -= id;
+            break;
+
+        case BTN_ID_CALC_MUL:
+            calculatorstruct.calculated_value *= id;
+            break;
+
+        case BTN_ID_CALC_DIV:
+            if(id)//被除数不能为0
+            {
+                calculatorstruct.calculated_value /= id;
+            }
+            break;
+
+        default:
+            break;
+    }
+}
+
 /*计算器功能*/
 void calculator_function(btn_id_t id)
 {
-    switch (id)
+    uint8_t last_keytype = calculator_typejudge(calculatorstruct.last_keynum);//判断上一次按键类型
+    uint8_t now_keytype = calculator_typejudge(calculatorstruct.now_keytype);//判断当前按键类型
+
+    switch (last_keytype)
     {
-        case BTN_ID_CALC_0:
-            switch (calculatorstruct.Operator)
+        case 1://判断上一个按键类型为数字
+            switch (now_keytype)
             {
-                case BTN_ID_CALC_ADD:
-                    calculatorstruct.calculated_value += id;
+                case 1://判断当前按键类型为数字
+                    uint8_t temp = id - BTN_ID_CALC_0;//得出当前值
+                    calculatorstruct.calculated_value  = calculatorstruct.calculated_value * 10 + temp;
                     break;
                 
-                case BTN_ID_CALC_SUB:
-                    calculatorstruct.calculated_value -= id;
-                    break;
-
-                case BTN_ID_CALC_MUL:
-                    calculatorstruct.calculated_value *= id;
-                    break;
-
-                case BTN_ID_CALC_DIV:
-                    if(id)//被除数不能为0
-                    {
-                        calculatorstruct.calculated_value += id;
-                    }
-                    // else
-                    // {
-
-                    // }
-                    break;
-
                 default:
                     break;
             }
+            
             break;
         
         default:
             break;
     }
+
+    last_keytype = now_keytype;
 }

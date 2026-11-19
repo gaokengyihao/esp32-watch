@@ -1,19 +1,21 @@
+// VS Code 调试配置（按 F5 或启动 ESP-IDF Debug 时使用）。
+// 只影响调试，不影响编译、烧录和代码跳转；这个文件没有绝对路径，两台电脑通用。
 {
-  "version": "0.2.0",
-  "configurations": [
+  "version": "0.2.0", // launch.json 的格式版本
+  "configurations": [ // 调试配置列表，可以有多个
     {
-      "type": "gdbtarget",
-      "request": "attach",
-      "name": "ESP-IDF Debug",
-      "program": "${workspaceFolder}/build/${command:espIdf.getProjectName}.elf",
-      "gdb": "${command:espIdf.getToolchainGdb}",
-      "initialBreakpoint": "app_main",
-      "runOpenOCD": true,
-      "target": {
-        "connectCommands": [
-          "set remotetimeout 20",
-          "monitor reset halt",
-          "maintenance flush register-cache"
+      "type": "gdbtarget", // 调试器类型：GDB Target，ESP-IDF 使用 GDB + OpenOCD
+      "request": "attach", // attach=连接到目标；launch=启动新程序
+      "name": "ESP-IDF Debug", // 在调试下拉菜单里显示的名字
+      "program": "${workspaceFolder}/build/${command:espIdf.getProjectName}.elf", // 要调试的 ELF 文件；项目名由 ESP-IDF 扩展命令取得
+      "gdb": "${command:espIdf.getToolchainGdb}", // GDB 路径由 ESP-IDF 扩展按当前工具链自动解析
+      "initialBreakpoint": "app_main", // 启动后先停在 app_main
+      "runOpenOCD": true, // 调试前自动启动 OpenOCD
+      "target": { // GDB 连接目标后的设置
+        "connectCommands": [ // 连接目标后依次执行的 GDB 命令
+          "set remotetimeout 20", // GDB 远程连接超时 20 秒
+          "monitor reset halt", // 通过 OpenOCD 复位芯片并暂停 CPU
+          "maintenance flush register-cache" // 刷新 GDB 的寄存器缓存
         ]
       }
     }

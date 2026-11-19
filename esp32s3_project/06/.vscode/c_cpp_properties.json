@@ -1,20 +1,22 @@
+// C/C++ 扩展的 IntelliSense 配置，只影响代码提示、跳转和错误波浪线。
+// 注意：clangd 不读这个文件；clangd 用工程根目录的 .clangd + build/compile_commands.json。
 {
-  "configurations": [
+  "configurations": [ // 可以有多个配置，这里只有一个叫 ESP-IDF 的配置
     {
-      "name": "ESP-IDF",
-      "compilerPath": "",
-      "compileCommands": "${config:idf.buildPath}/compile_commands.json",
-      "intelliSenseMode": "gcc-x86",
-      "includePath": [
-        "${workspaceFolder}/**"
+      "name": "ESP-IDF", // 配置名称，显示在 VS Code 的配置选择器里
+      "compilerPath": "", // 留空=使用 compileCommands 里的编译器信息；也可以填 xtensa-esp32s3-elf-gcc.exe 的路径
+      "compileCommands": "${workspaceFolder}/build/compile_commands.json", // 编译数据库路径；直接指向工程下的 build，避免 ${config:idf.buildPath} 解析不到
+      "intelliSenseMode": "gcc-x86", // IntelliSense 解析模式，不是芯片架构；保持默认即可
+      "includePath": [ // 额外的头文件搜索路径
+        "${workspaceFolder}/**" // 只搜索工程目录；ESP-IDF 组件的头文件由 compileCommands 里的 -I 提供
       ],
-      "browse": {
-        "path": [
-          "${workspaceFolder}"
+      "browse": { // 符号浏览（Go to Symbol、Peek 等）的设置
+        "path": [ // 符号浏览数据库的搜索路径
+          "${workspaceFolder}" // 只浏览工程目录
         ],
-        "limitSymbolsToIncludedHeaders": true
+        "limitSymbolsToIncludedHeaders": true // true=只显示被 include 的头文件里的符号
       }
     }
   ],
-  "version": 4
+  "version": 4 // 配置文件格式版本，固定为 4
 }
