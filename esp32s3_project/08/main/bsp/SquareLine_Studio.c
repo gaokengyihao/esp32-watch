@@ -3,6 +3,8 @@
 
 #include "ui.h"
 
+#include <stdio.h>
+
 typedef enum
 {
     PAGE_NONE = 0,
@@ -78,11 +80,13 @@ typedef enum
 
 typedef struct 
 {
-    double calculated_value, calculated_tempvalue1, calculated_tempvalue2;
+    double calculated_value, calculated_currentvalue, calculated_tempvalue;
     uint8_t Operator, last_keynum, keynum_count;//第一次上电后赋值
 }calculatorstructtypedef;
 
 calculatorstructtypedef calculatorstruct;
+
+char buf[32], currenbuf[64], tempbuf[32], expressionbuf[32], Operatorbuf[8];
 
 extern lv_indev_t *input_indev;//输入设备指针
 
@@ -90,6 +94,7 @@ static void btn_test_cb(lv_event_t *e);//按键事件回调
 static void gesture_cb(lv_event_t *e);//手势事件回调
 
 void menu1_function(btn_id_t id);
+void calculator_function(btn_id_t id);
 
 /*手势*/
 #define     next        LV_DIR_LEFT
@@ -203,16 +208,51 @@ void gesture_init()
     lv_obj_add_event_cb(ui_card_pack, gesture_cb, LV_EVENT_GESTURE, (void *)(uintptr_t)PAGE_CARD_PACK);
 }
 
+typedef enum{
+    /*计算器*/
+    btn_type_calculator_num = 1,//计算器数字
+    btn_type_calculator_Operator = 3,//计算器运算符
+
+    /*菜单1*/
+    btn_type_menu1 = 4
+}btn_type_t;
+
 /*按键类型判断*/
 uint8_t calculator_typejudge(uint8_t id)
 {
     uint8_t btn_type = 0;
     /*计算器*/
-    if(id >= BTN_ID_CALC_0 && id <= BTN_ID_CALC_9){btn_type = 1;}
-    if(id == BTN_ID_CALC_DOT){btn_type = 2;}
-    if(id >= BTN_ID_CALC_ADD && id <= BTN_ID_CALC_EQ){btn_type = 3;}
+    if(id >= BTN_ID_CALC_0 && id <= BTN_ID_CALC_9){btn_type = btn_type_calculator_num;}
+    // if(id == BTN_ID_CALC_DOT){btn_type = 2;}
+    if(id >= BTN_ID_CALC_ADD && id <= BTN_ID_CALC_EQ){btn_type = btn_type_calculator_Operator;}
+
+    /*菜单1*/
+    if(id >= BTN_ID_MENU1_CALENDAR && id <= BTN_ID_MENU1_CARDPACK){btn_type = btn_type_menu1;}
 
     return btn_type;
+}
+
+// calculated_value, calculated_currentvalue, calculated_tempvalue
+/*计算器显示*/
+void calculator_show()
+{
+    if(calculatorstruct.Operator)
+    {
+        snprintf(currenbuf, sizeof(currenbuf), "%.6g", calculatorstruct.calculated_currentvalue);
+        snprintf(Operatorbuf, sizeof(Operatorbuf), "%.6g", calculatorstruct.Operator);
+        snprintf(tempbuf, sizeof(tempbuf), "%.6g", calculatorstruct.calculated_tempvalue);
+
+        snprintf(expressionbuf, sizeof(expressionbuf), "%s %s %s ", tempbuf, Operatorbuf, tempbuf);
+        lv_label_set_text(ui_calc_expression, expressionbuf);
+    }
+    else
+    {
+        lv_label_set_text(ui_calc_expression, "");
+    }
+
+
+    snprintf(buf, sizeof(buf), "%.6g", calculatorstruct.calculated_value);
+    lv_label_set_text(ui_calc_value, buf);
 }
 
 /*lvgl按键回调函数*/
@@ -225,22 +265,26 @@ static void btn_test_cb(lv_event_t *e)
         {
             switch (key_type)
             {
-                case 1:
-                    lv_label_set_text_fmt(ui_calc_value, "%f", calculatorstruct.calculated_value);
+                case btn_type_calculator_num:
+                    calculator_function(id);
+                    calculator_show();
                     break;
                 
+                case 4:
+                    menu1_function(id);
+                    break;
+
                 default:
                     break;
             }
         }
-        menu1_function(id);
 
     }
 }
 
 void calculatorstruct_init()
 {
-    calculatorstruct.last_keynum = 1;
+    calculatorstruct.last_keynum = BTN_ID_CALC_0;
 }
 
 /*按键事件、id注册*/
@@ -319,6 +363,7 @@ void menu1_function(btn_id_t id)
 //     BTN_ID_CALC_C = 38,
 // double calculated_value,calculated_tempvalue1,calculated_tempvalue2;
 
+/*当上一次为*/
 void calculator_num(btn_id_t id)
 {
     id -= 22;
@@ -348,31 +393,42 @@ void calculator_num(btn_id_t id)
     }
 }
 
+
+
 /*计算器功能*/
 void calculator_function(btn_id_t id)
 {
     uint8_t last_keytype = calculator_typejudge(calculatorstruct.last_keynum);//判断上一次按键类型
-    uint8_t now_keytype = calculator_typejudge(calculatorstruct.now_keytype);//判断当前按键类型
+    uint8_t now_keytype = calculator_typejudge(id);//判断当前按键类型
 
     switch (last_keytype)
     {
-        case 1://判断上一个按键类型为数字
+        case btn_type_calculator_num://判断上一个按键类型为数字
+            uint8_t temp = id - BTN_ID_CALC_0;//得出当前值
             switch (now_keytype)
             {
-                case 1://判断当前按键类型为数字
-                    uint8_t temp = id - BTN_ID_CALC_0;//得出当前值
-                    calculatorstruct.calculated_value  = calculatorstruct.calculated_value * 10 + temp;
+                case btn_type_calculator_num://判断当前按键类型为数字
+                    calculatorstruct.calculated_currentvalue  = calculatorstruct.calculated_currentvalue * 10 + temp;
                     break;
                 
+                case btn_type_calculator_Operator://判断当前按键类型为运算符
+                    calculatorstruct.calculated_tempvalue = calculatorstruct.calculated_currentvalue;
+                    break;
+
                 default:
                     break;
             }
-            
             break;
-        
+            
+        case btn_type_calculator_Operator://上一个按键类型为运算符
+            calculatorstruct.calculated_value += calculatorstruct.calculated_tempvalue + calculatorstruct.calculated_currentvalue;//计算所有值
+            calculatorstruct.calculated_currentvalue = 0;
+            calculatorstruct.calculated_tempvalue = 0;
+            break;
+
         default:
             break;
     }
 
-    last_keytype = now_keytype;
+    last_keytype = now_keytype;//将当前按下的按键类型赋值给上一个按键类型
 }
