@@ -5,8 +5,6 @@
 
 #include "../ui.h"
 
-lv_obj_t * uic_calc_c_label;
-lv_obj_t * uic_calc_c;
 lv_obj_t * uic_calc_add_label;
 lv_obj_t * uic_calc_add;
 lv_obj_t * uic_calc_eq_label;
@@ -40,6 +38,8 @@ lv_obj_t * uic_calc_8;
 lv_obj_t * uic_calc_7_label;
 lv_obj_t * uic_calc_7;
 lv_obj_t * uic_calc_keys;
+lv_obj_t * uic_calc_c_label;
+lv_obj_t * uic_calc_c;
 lv_obj_t * uic_calc_expression;
 lv_obj_t * uic_calc_value;
 lv_obj_t * uic_calc_display;
@@ -50,6 +50,8 @@ lv_obj_t * ui_calculator_page_bg = NULL;
 lv_obj_t * ui_calc_display = NULL;
 lv_obj_t * ui_calc_value = NULL;
 lv_obj_t * ui_calc_expression = NULL;
+lv_obj_t * ui_calc_C = NULL;
+lv_obj_t * ui_calc_C_label = NULL;
 lv_obj_t * ui_calc_keys = NULL;
 lv_obj_t * ui_calc_7 = NULL;
 lv_obj_t * ui_calc_7_label = NULL;
@@ -83,8 +85,6 @@ lv_obj_t * ui_calc_eq = NULL;
 lv_obj_t * ui_calc_eq_label = NULL;
 lv_obj_t * ui_calc_add = NULL;
 lv_obj_t * ui_calc_add_label = NULL;
-lv_obj_t * ui_calc_C = NULL;
-lv_obj_t * ui_calc_C_label = NULL;
 // event funtions
 
 // build funtions
@@ -131,7 +131,7 @@ void ui_calculator_screen_init(void)
     ui_calc_value = lv_label_create(ui_calc_display);
     lv_obj_set_width(ui_calc_value, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_calc_value, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_calc_value, -6);
+    lv_obj_set_x(ui_calc_value, -48);
     lv_obj_set_y(ui_calc_value, 22);
     lv_obj_set_align(ui_calc_value, LV_ALIGN_RIGHT_MID);
     lv_label_set_text(ui_calc_value, "0");
@@ -143,7 +143,7 @@ void ui_calculator_screen_init(void)
     ui_calc_expression = lv_label_create(ui_calc_display);
     lv_obj_set_width(ui_calc_expression, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_height(ui_calc_expression, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_x(ui_calc_expression, -6);
+    lv_obj_set_x(ui_calc_expression, -48);
     lv_obj_set_y(ui_calc_expression, 4);
     lv_obj_set_align(ui_calc_expression, LV_ALIGN_TOP_RIGHT);
     lv_label_set_long_mode(ui_calc_expression, LV_LABEL_LONG_MODE_SCROLL_CIRCULAR);
@@ -153,8 +153,36 @@ void ui_calculator_screen_init(void)
     lv_obj_set_style_text_opa(ui_calc_expression, 255, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_font(ui_calc_expression, &ui_font_Font20, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
 
+    ui_calc_C = lv_obj_create(ui_calc_display);
+    lv_obj_set_width(ui_calc_C, 40);
+    lv_obj_set_height(ui_calc_C, 32);
+    lv_obj_set_x(ui_calc_C, -6);
+    lv_obj_set_y(ui_calc_C, 0);
+    lv_obj_set_align(ui_calc_C, LV_ALIGN_RIGHT_MID);
+    lv_obj_set_scrollable(ui_calc_C, false);
+    lv_obj_set_style_radius(ui_calc_C, 6, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_calc_C, lv_color_hex(0x3C1A1E), (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_calc_C, 255, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_width(ui_calc_C, 0, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_left(ui_calc_C, 0, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_right(ui_calc_C, 0, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_top(ui_calc_C, 0, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_bottom(ui_calc_C, 0, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui_calc_C, lv_color_hex(0x543236), (lv_style_selector_t)LV_PART_MAIN | LV_STATE_PRESSED);
+    lv_obj_set_style_bg_opa(ui_calc_C, 255, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_PRESSED);
+
+    ui_calc_C_label = lv_label_create(ui_calc_C);
+    lv_obj_set_width(ui_calc_C_label, LV_SIZE_CONTENT);   /// 1
+    lv_obj_set_height(ui_calc_C_label, LV_SIZE_CONTENT);    /// 1
+    lv_obj_set_align(ui_calc_C_label, LV_ALIGN_CENTER);
+    lv_label_set_text(ui_calc_C_label, "C");
+    lv_obj_set_style_text_color(ui_calc_C_label, lv_color_hex(0xFF1919),
+                                (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_calc_C_label, 255, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_font(ui_calc_C_label, &ui_font_Font20, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
+
     ui_calc_keys = lv_obj_create(ui_calculator);
-    lv_obj_set_width(ui_calc_keys, 194);
+    lv_obj_set_width(ui_calc_keys, 220);
     lv_obj_set_height(ui_calc_keys, 174);
     lv_obj_set_x(ui_calc_keys, 0);
     lv_obj_set_y(ui_calc_keys, 47);
@@ -171,10 +199,10 @@ void ui_calculator_screen_init(void)
     lv_obj_set_style_pad_bottom(ui_calc_keys, 0, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_calc_7 = lv_obj_create(ui_calc_keys);
-    lv_obj_set_width(ui_calc_7, 44);
-    lv_obj_set_height(ui_calc_7, 30);
-    lv_obj_set_x(ui_calc_7, -72);
-    lv_obj_set_y(ui_calc_7, -72);
+    lv_obj_set_width(ui_calc_7, 52);
+    lv_obj_set_height(ui_calc_7, 40);
+    lv_obj_set_x(ui_calc_7, -84);
+    lv_obj_set_y(ui_calc_7, -66);
     lv_obj_set_align(ui_calc_7, LV_ALIGN_CENTER);
     lv_obj_set_scrollable(ui_calc_7, false);
     lv_obj_set_style_radius(ui_calc_7, 6, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -199,10 +227,10 @@ void ui_calculator_screen_init(void)
     lv_obj_set_style_text_font(ui_calc_7_label, &ui_font_Font20, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_calc_8 = lv_obj_create(ui_calc_keys);
-    lv_obj_set_width(ui_calc_8, 44);
-    lv_obj_set_height(ui_calc_8, 30);
-    lv_obj_set_x(ui_calc_8, -24);
-    lv_obj_set_y(ui_calc_8, -72);
+    lv_obj_set_width(ui_calc_8, 52);
+    lv_obj_set_height(ui_calc_8, 40);
+    lv_obj_set_x(ui_calc_8, -28);
+    lv_obj_set_y(ui_calc_8, -66);
     lv_obj_set_align(ui_calc_8, LV_ALIGN_CENTER);
     lv_obj_set_scrollable(ui_calc_8, false);
     lv_obj_set_style_radius(ui_calc_8, 6, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -227,10 +255,10 @@ void ui_calculator_screen_init(void)
     lv_obj_set_style_text_font(ui_calc_8_label, &ui_font_Font20, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_calc_9 = lv_obj_create(ui_calc_keys);
-    lv_obj_set_width(ui_calc_9, 44);
-    lv_obj_set_height(ui_calc_9, 30);
-    lv_obj_set_x(ui_calc_9, 24);
-    lv_obj_set_y(ui_calc_9, -72);
+    lv_obj_set_width(ui_calc_9, 52);
+    lv_obj_set_height(ui_calc_9, 40);
+    lv_obj_set_x(ui_calc_9, 28);
+    lv_obj_set_y(ui_calc_9, -66);
     lv_obj_set_align(ui_calc_9, LV_ALIGN_CENTER);
     lv_obj_set_scrollable(ui_calc_9, false);
     lv_obj_set_style_radius(ui_calc_9, 6, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -255,10 +283,10 @@ void ui_calculator_screen_init(void)
     lv_obj_set_style_text_font(ui_calc_9_label, &ui_font_Font20, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_calc_div = lv_obj_create(ui_calc_keys);
-    lv_obj_set_width(ui_calc_div, 44);
-    lv_obj_set_height(ui_calc_div, 30);
-    lv_obj_set_x(ui_calc_div, 72);
-    lv_obj_set_y(ui_calc_div, -72);
+    lv_obj_set_width(ui_calc_div, 52);
+    lv_obj_set_height(ui_calc_div, 40);
+    lv_obj_set_x(ui_calc_div, 84);
+    lv_obj_set_y(ui_calc_div, -66);
     lv_obj_set_align(ui_calc_div, LV_ALIGN_CENTER);
     lv_obj_set_scrollable(ui_calc_div, false);
     lv_obj_set_style_radius(ui_calc_div, 6, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -283,10 +311,10 @@ void ui_calculator_screen_init(void)
     lv_obj_set_style_text_font(ui_calc_div_label, &ui_font_Font20, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_calc_4 = lv_obj_create(ui_calc_keys);
-    lv_obj_set_width(ui_calc_4, 44);
-    lv_obj_set_height(ui_calc_4, 30);
-    lv_obj_set_x(ui_calc_4, -72);
-    lv_obj_set_y(ui_calc_4, -36);
+    lv_obj_set_width(ui_calc_4, 52);
+    lv_obj_set_height(ui_calc_4, 40);
+    lv_obj_set_x(ui_calc_4, -84);
+    lv_obj_set_y(ui_calc_4, -22);
     lv_obj_set_align(ui_calc_4, LV_ALIGN_CENTER);
     lv_obj_set_scrollable(ui_calc_4, false);
     lv_obj_set_style_radius(ui_calc_4, 6, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -311,10 +339,10 @@ void ui_calculator_screen_init(void)
     lv_obj_set_style_text_font(ui_calc_4_label, &ui_font_Font20, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_calc_5 = lv_obj_create(ui_calc_keys);
-    lv_obj_set_width(ui_calc_5, 44);
-    lv_obj_set_height(ui_calc_5, 30);
-    lv_obj_set_x(ui_calc_5, -24);
-    lv_obj_set_y(ui_calc_5, -36);
+    lv_obj_set_width(ui_calc_5, 52);
+    lv_obj_set_height(ui_calc_5, 40);
+    lv_obj_set_x(ui_calc_5, -28);
+    lv_obj_set_y(ui_calc_5, -22);
     lv_obj_set_align(ui_calc_5, LV_ALIGN_CENTER);
     lv_obj_set_scrollable(ui_calc_5, false);
     lv_obj_set_style_radius(ui_calc_5, 6, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -339,10 +367,10 @@ void ui_calculator_screen_init(void)
     lv_obj_set_style_text_font(ui_calc_5_label, &ui_font_Font20, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_calc_6 = lv_obj_create(ui_calc_keys);
-    lv_obj_set_width(ui_calc_6, 44);
-    lv_obj_set_height(ui_calc_6, 30);
-    lv_obj_set_x(ui_calc_6, 24);
-    lv_obj_set_y(ui_calc_6, -36);
+    lv_obj_set_width(ui_calc_6, 52);
+    lv_obj_set_height(ui_calc_6, 40);
+    lv_obj_set_x(ui_calc_6, 28);
+    lv_obj_set_y(ui_calc_6, -22);
     lv_obj_set_align(ui_calc_6, LV_ALIGN_CENTER);
     lv_obj_set_scrollable(ui_calc_6, false);
     lv_obj_set_style_radius(ui_calc_6, 6, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -367,10 +395,10 @@ void ui_calculator_screen_init(void)
     lv_obj_set_style_text_font(ui_calc_6_label, &ui_font_Font20, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_calc_mul = lv_obj_create(ui_calc_keys);
-    lv_obj_set_width(ui_calc_mul, 44);
-    lv_obj_set_height(ui_calc_mul, 30);
-    lv_obj_set_x(ui_calc_mul, 72);
-    lv_obj_set_y(ui_calc_mul, -36);
+    lv_obj_set_width(ui_calc_mul, 52);
+    lv_obj_set_height(ui_calc_mul, 40);
+    lv_obj_set_x(ui_calc_mul, 84);
+    lv_obj_set_y(ui_calc_mul, -22);
     lv_obj_set_align(ui_calc_mul, LV_ALIGN_CENTER);
     lv_obj_set_scrollable(ui_calc_mul, false);
     lv_obj_set_style_radius(ui_calc_mul, 6, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -395,10 +423,10 @@ void ui_calculator_screen_init(void)
     lv_obj_set_style_text_font(ui_calc_mul_label, &ui_font_Font20, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_calc_1 = lv_obj_create(ui_calc_keys);
-    lv_obj_set_width(ui_calc_1, 44);
-    lv_obj_set_height(ui_calc_1, 30);
-    lv_obj_set_x(ui_calc_1, -72);
-    lv_obj_set_y(ui_calc_1, 0);
+    lv_obj_set_width(ui_calc_1, 52);
+    lv_obj_set_height(ui_calc_1, 40);
+    lv_obj_set_x(ui_calc_1, -84);
+    lv_obj_set_y(ui_calc_1, 22);
     lv_obj_set_align(ui_calc_1, LV_ALIGN_CENTER);
     lv_obj_set_scrollable(ui_calc_1, false);
     lv_obj_set_style_radius(ui_calc_1, 6, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -423,10 +451,10 @@ void ui_calculator_screen_init(void)
     lv_obj_set_style_text_font(ui_calc_1_label, &ui_font_Font20, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_calc_2 = lv_obj_create(ui_calc_keys);
-    lv_obj_set_width(ui_calc_2, 44);
-    lv_obj_set_height(ui_calc_2, 30);
-    lv_obj_set_x(ui_calc_2, -24);
-    lv_obj_set_y(ui_calc_2, 0);
+    lv_obj_set_width(ui_calc_2, 52);
+    lv_obj_set_height(ui_calc_2, 40);
+    lv_obj_set_x(ui_calc_2, -28);
+    lv_obj_set_y(ui_calc_2, 22);
     lv_obj_set_align(ui_calc_2, LV_ALIGN_CENTER);
     lv_obj_set_scrollable(ui_calc_2, false);
     lv_obj_set_style_radius(ui_calc_2, 6, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -451,10 +479,10 @@ void ui_calculator_screen_init(void)
     lv_obj_set_style_text_font(ui_calc_2_label, &ui_font_Font20, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_calc_3 = lv_obj_create(ui_calc_keys);
-    lv_obj_set_width(ui_calc_3, 44);
-    lv_obj_set_height(ui_calc_3, 30);
-    lv_obj_set_x(ui_calc_3, 24);
-    lv_obj_set_y(ui_calc_3, 0);
+    lv_obj_set_width(ui_calc_3, 52);
+    lv_obj_set_height(ui_calc_3, 40);
+    lv_obj_set_x(ui_calc_3, 28);
+    lv_obj_set_y(ui_calc_3, 22);
     lv_obj_set_align(ui_calc_3, LV_ALIGN_CENTER);
     lv_obj_set_scrollable(ui_calc_3, false);
     lv_obj_set_style_radius(ui_calc_3, 6, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -479,10 +507,10 @@ void ui_calculator_screen_init(void)
     lv_obj_set_style_text_font(ui_calc_3_label, &ui_font_Font20, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_calc_sub = lv_obj_create(ui_calc_keys);
-    lv_obj_set_width(ui_calc_sub, 44);
-    lv_obj_set_height(ui_calc_sub, 30);
-    lv_obj_set_x(ui_calc_sub, 72);
-    lv_obj_set_y(ui_calc_sub, 0);
+    lv_obj_set_width(ui_calc_sub, 52);
+    lv_obj_set_height(ui_calc_sub, 40);
+    lv_obj_set_x(ui_calc_sub, 84);
+    lv_obj_set_y(ui_calc_sub, 22);
     lv_obj_set_align(ui_calc_sub, LV_ALIGN_CENTER);
     lv_obj_set_scrollable(ui_calc_sub, false);
     lv_obj_set_style_radius(ui_calc_sub, 6, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -507,10 +535,10 @@ void ui_calculator_screen_init(void)
     lv_obj_set_style_text_font(ui_calc_sub_label, &ui_font_Font20, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_calc_0 = lv_obj_create(ui_calc_keys);
-    lv_obj_set_width(ui_calc_0, 44);
-    lv_obj_set_height(ui_calc_0, 30);
-    lv_obj_set_x(ui_calc_0, -72);
-    lv_obj_set_y(ui_calc_0, 36);
+    lv_obj_set_width(ui_calc_0, 52);
+    lv_obj_set_height(ui_calc_0, 40);
+    lv_obj_set_x(ui_calc_0, -84);
+    lv_obj_set_y(ui_calc_0, 66);
     lv_obj_set_align(ui_calc_0, LV_ALIGN_CENTER);
     lv_obj_set_scrollable(ui_calc_0, false);
     lv_obj_set_style_radius(ui_calc_0, 6, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -535,10 +563,10 @@ void ui_calculator_screen_init(void)
     lv_obj_set_style_text_font(ui_calc_0_label, &ui_font_Font20, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_calc_dot = lv_obj_create(ui_calc_keys);
-    lv_obj_set_width(ui_calc_dot, 44);
-    lv_obj_set_height(ui_calc_dot, 30);
-    lv_obj_set_x(ui_calc_dot, -24);
-    lv_obj_set_y(ui_calc_dot, 36);
+    lv_obj_set_width(ui_calc_dot, 52);
+    lv_obj_set_height(ui_calc_dot, 40);
+    lv_obj_set_x(ui_calc_dot, -28);
+    lv_obj_set_y(ui_calc_dot, 66);
     lv_obj_set_align(ui_calc_dot, LV_ALIGN_CENTER);
     lv_obj_set_scrollable(ui_calc_dot, false);
     lv_obj_set_style_radius(ui_calc_dot, 6, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -563,10 +591,10 @@ void ui_calculator_screen_init(void)
     lv_obj_set_style_text_font(ui_calc_dot_label, &ui_font_Font20, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_calc_eq = lv_obj_create(ui_calc_keys);
-    lv_obj_set_width(ui_calc_eq, 44);
-    lv_obj_set_height(ui_calc_eq, 30);
-    lv_obj_set_x(ui_calc_eq, 24);
-    lv_obj_set_y(ui_calc_eq, 36);
+    lv_obj_set_width(ui_calc_eq, 52);
+    lv_obj_set_height(ui_calc_eq, 40);
+    lv_obj_set_x(ui_calc_eq, 28);
+    lv_obj_set_y(ui_calc_eq, 66);
     lv_obj_set_align(ui_calc_eq, LV_ALIGN_CENTER);
     lv_obj_set_scrollable(ui_calc_eq, false);
     lv_obj_set_style_radius(ui_calc_eq, 6, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -591,10 +619,10 @@ void ui_calculator_screen_init(void)
     lv_obj_set_style_text_font(ui_calc_eq_label, &ui_font_Font20, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_calc_add = lv_obj_create(ui_calc_keys);
-    lv_obj_set_width(ui_calc_add, 44);
-    lv_obj_set_height(ui_calc_add, 30);
-    lv_obj_set_x(ui_calc_add, 72);
-    lv_obj_set_y(ui_calc_add, 36);
+    lv_obj_set_width(ui_calc_add, 52);
+    lv_obj_set_height(ui_calc_add, 40);
+    lv_obj_set_x(ui_calc_add, 84);
+    lv_obj_set_y(ui_calc_add, 66);
     lv_obj_set_align(ui_calc_add, LV_ALIGN_CENTER);
     lv_obj_set_scrollable(ui_calc_add, false);
     lv_obj_set_style_radius(ui_calc_add, 6, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -618,39 +646,13 @@ void ui_calculator_screen_init(void)
     lv_obj_set_style_text_opa(ui_calc_add_label, 255, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_font(ui_calc_add_label, &ui_font_Font20, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    ui_calc_C = lv_obj_create(ui_calc_keys);
-    lv_obj_set_width(ui_calc_C, 194);
-    lv_obj_set_height(ui_calc_C, 30);
-    lv_obj_set_x(ui_calc_C, 0);
-    lv_obj_set_y(ui_calc_C, 72);
-    lv_obj_set_align(ui_calc_C, LV_ALIGN_CENTER);
-    lv_obj_set_scrollable(ui_calc_C, false);
-    lv_obj_set_style_radius(ui_calc_C, 6, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_color(ui_calc_C, lv_color_hex(0x3C1A1E), (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_calc_C, 255, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_border_width(ui_calc_C, 0, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_pad_left(ui_calc_C, 0, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_pad_right(ui_calc_C, 0, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_pad_top(ui_calc_C, 0, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_pad_bottom(ui_calc_C, 0, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_color(ui_calc_C, lv_color_hex(0x543236), (lv_style_selector_t)LV_PART_MAIN | LV_STATE_PRESSED);
-    lv_obj_set_style_bg_opa(ui_calc_C, 255, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_PRESSED);
-
-    ui_calc_C_label = lv_label_create(ui_calc_C);
-    lv_obj_set_width(ui_calc_C_label, LV_SIZE_CONTENT);   /// 1
-    lv_obj_set_height(ui_calc_C_label, LV_SIZE_CONTENT);    /// 1
-    lv_obj_set_align(ui_calc_C_label, LV_ALIGN_CENTER);
-    lv_label_set_text(ui_calc_C_label, "C");
-    lv_obj_set_style_text_color(ui_calc_C_label, lv_color_hex(0xFF1919),
-                                (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_text_opa(ui_calc_C_label, 255, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_text_font(ui_calc_C_label, &ui_font_Font20, (lv_style_selector_t)LV_PART_MAIN | LV_STATE_DEFAULT);
-
     uic_calculator = ui_calculator;
     uic_calculator_page_bg = ui_calculator_page_bg;
     uic_calc_display = ui_calc_display;
     uic_calc_value = ui_calc_value;
     uic_calc_expression = ui_calc_expression;
+    uic_calc_c = ui_calc_C;
+    uic_calc_c_label = ui_calc_C_label;
     uic_calc_keys = ui_calc_keys;
     uic_calc_7 = ui_calc_7;
     uic_calc_7_label = ui_calc_7_label;
@@ -684,8 +686,6 @@ void ui_calculator_screen_init(void)
     uic_calc_eq_label = ui_calc_eq_label;
     uic_calc_add = ui_calc_add;
     uic_calc_add_label = ui_calc_add_label;
-    uic_calc_c = ui_calc_C;
-    uic_calc_c_label = ui_calc_C_label;
 
 }
 
@@ -704,6 +704,10 @@ void ui_calculator_screen_destroy(void)
     ui_calc_value = NULL;
     uic_calc_expression = NULL;
     ui_calc_expression = NULL;
+    uic_calc_c = NULL;
+    ui_calc_C = NULL;
+    uic_calc_c_label = NULL;
+    ui_calc_C_label = NULL;
     uic_calc_keys = NULL;
     ui_calc_keys = NULL;
     uic_calc_7 = NULL;
@@ -770,9 +774,5 @@ void ui_calculator_screen_destroy(void)
     ui_calc_add = NULL;
     uic_calc_add_label = NULL;
     ui_calc_add_label = NULL;
-    uic_calc_c = NULL;
-    ui_calc_C = NULL;
-    uic_calc_c_label = NULL;
-    ui_calc_C_label = NULL;
 
 }

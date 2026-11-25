@@ -18,6 +18,8 @@ extern lv_obj_t * ui_calculator_page_bg;
 extern lv_obj_t * ui_calc_display;
 extern lv_obj_t * ui_calc_value;
 extern lv_obj_t * ui_calc_expression;
+extern lv_obj_t * ui_calc_C;
+extern lv_obj_t * ui_calc_C_label;
 extern lv_obj_t * ui_calc_keys;
 extern lv_obj_t * ui_calc_7;
 extern lv_obj_t * ui_calc_7_label;
@@ -51,14 +53,14 @@ extern lv_obj_t * ui_calc_eq;
 extern lv_obj_t * ui_calc_eq_label;
 extern lv_obj_t * ui_calc_add;
 extern lv_obj_t * ui_calc_add_label;
-extern lv_obj_t * ui_calc_C;
-extern lv_obj_t * ui_calc_C_label;
 // CUSTOM VARIABLES
 extern lv_obj_t * uic_calculator;
 extern lv_obj_t * uic_calculator_page_bg;
 extern lv_obj_t * uic_calc_display;
 extern lv_obj_t * uic_calc_value;
 extern lv_obj_t * uic_calc_expression;
+extern lv_obj_t * uic_calc_c;
+extern lv_obj_t * uic_calc_c_label;
 extern lv_obj_t * uic_calc_keys;
 extern lv_obj_t * uic_calc_7;
 extern lv_obj_t * uic_calc_7_label;
@@ -92,8 +94,6 @@ extern lv_obj_t * uic_calc_eq;
 extern lv_obj_t * uic_calc_eq_label;
 extern lv_obj_t * uic_calc_add;
 extern lv_obj_t * uic_calc_add_label;
-extern lv_obj_t * uic_calc_c;
-extern lv_obj_t * uic_calc_c_label;
 
 #ifdef __cplusplus
 } /*extern "C"*/
