@@ -1,199 +1,344 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 
 #include "ui.h"
 #include "ui_btn.h"
-
 #include "ui_calculator.h"
 
+#define CALC_INPUT_DIGITS_MAX 9
 
-
-char buf[32], currenbuf[64], tempbuf[32], expressionbuf[32], operatorbuf[8];
-
-typedef struct 
+typedef enum
 {
-    double value, currentvalue, tempvalue, currentvalue_int, currentvalue_dec;
-    uint8_t dot_flag, operator, char_operator, char_equal;
-    uint32_t dec_scale;
-}calculatorstructtypedef;
+    CALC_STATE_INPUT = 0,
+    CALC_STATE_RESULT
+} calc_state_t;
 
-calculatorstructtypedef calculatorstruct;
-
-/*按键类型判断*/
-uint8_t calculator_typejudge(uint8_t id)
+typedef struct
 {
-    uint8_t btn_type = 0;
+    char input[16];       /* 当前输入，例如 "12.5" */
+    char expr[64];        /* 显示的整个算式，例如 "12+3=15" */
 
-    if(id >= BTN_ID_CALC_0 && id <= BTN_ID_CALC_9){btn_type = btn_type_calculator_num;}
-    if(id == BTN_ID_CALC_DOT){btn_type = btn_type_calculator_dot;}
-    if(id >= BTN_ID_CALC_ADD && id <= BTN_ID_CALC_DIV){btn_type = btn_type_calculator_operator;}
-    if(id == BTN_ID_CALC_C){btn_type = btn_type_calculator_clear;}
-    if(id == BTN_ID_CALC_EQ){btn_type = btn_type_calculator_equal;}
+    double acc;           /* 左操作数/累计结果 */
+    char op;              /* 当前待计算运算符：+ - * / */
 
-    return btn_type;
+    calc_state_t state;
+    uint8_t has_dot;
+    uint8_t error;
+} calculator_t;
+
+static calculator_t calc;
+
+static uint8_t calc_input_digits(void)
+{
+    uint8_t n = 0;
+    const char *p = calc.input;
+
+    while(*p)
+    {
+        if(*p >= '0' && *p <= '9')
+        {
+            n++;
+        }
+        p++;
+    }
+
+    return n;
 }
 
-/*计算小数倍率*/
-void calculator_dot()
+static void calc_append_expr(const char *s)
 {
-    if (calculatorstruct.dot_flag)//第一次按下小数点
+    size_t len = strlen(calc.expr);
+    size_t add = strlen(s);
+
+    if(len + add + 1 < sizeof(calc.expr))
     {
-        calculatorstruct.dec_scale *= 10;
+        strcat(calc.expr, s);
     }
 }
 
-/*计算器 将按下按键转换成数据*/
-void calculator_convert(uint8_t id)
+static void calc_append_expr_char(char c)
 {
-    double temp = id - BTN_ID_CALC_0;
-    switch (calculatorstruct.dot_flag)
-    {
-        case 0://小数点前
-            calculatorstruct.currentvalue_int = calculatorstruct.currentvalue_int * 10 + temp;
-            break;
-
-        case 1://小数点后
-            calculator_dot();
-            calculatorstruct.currentvalue_dec = calculatorstruct.currentvalue_dec + temp / calculatorstruct.dec_scale;
-            break;
-        
-        default:
-            break;
-    }
-    calculatorstruct.currentvalue = calculatorstruct.currentvalue_int + calculatorstruct.currentvalue_dec;
+    char s[2];
+    s[0] = c;
+    s[1] = '\0';
+    calc_append_expr(s);
 }
 
-/*计算*/
-void calculator_result()
+static void calc_clear_state(void)
 {
-    switch (calculatorstruct.operator)
-    {
-        case BTN_ID_CALC_ADD:
-            calculatorstruct.value += calculatorstruct.currentvalue;
-            break;
-
-        case BTN_ID_CALC_SUB:
-            calculatorstruct.value -= calculatorstruct.currentvalue;
-            break;
-
-        case BTN_ID_CALC_MUL:
-            calculatorstruct.value *= calculatorstruct.currentvalue;
-            break;
-
-        case BTN_ID_CALC_DIV:
-            if(calculatorstruct.currentvalue != 0)
-            {
-                calculatorstruct.value /= calculatorstruct.currentvalue;
-            }
-            break;
-        
-        default:
-            break;
-    }
-    calculatorstruct.currentvalue_int = 0;
-    calculatorstruct.currentvalue_dec = 0;
-    calculatorstruct.dec_scale = 0;
-    calculatorstruct.dot_flag = 0;
+    memset(&calc, 0, sizeof(calc));
+    calc.state = CALC_STATE_INPUT;
+    calc.has_dot = 0;
+    calc.error = 0;
 }
 
-/*计算器 按下运算符后*/
-void calculator_operator(btn_id_t id)
+static void calc_render(void)
 {
-    if(calculatorstruct.operator)//已经有运算符的情况下再按下运算符
+    if(calc.error)
     {
-        calculator_result();
+        lv_label_set_text(ui_calc_expression, "Error");
+        lv_label_set_text(ui_calc_value, "Error");
+        return;
     }
-    else//第一次按下运算符
-    {
-        calculatorstruct.value = calculatorstruct.currentvalue;
-        calculatorstruct.currentvalue = 0;
-        calculatorstruct.currentvalue_int = 0;
-        calculatorstruct.currentvalue_dec = 0;
-    }
-    calculatorstruct.operator = id;//替换为新运算符
+
+    lv_label_set_text(ui_calc_expression, calc.expr);
+    lv_label_set_text(ui_calc_value, calc.input[0] ? calc.input : "0");
 }
 
-/*在显示时将运算符转成字符串*/
-char calculator_operator_char(uint8_t op)
+static double calc_get_input(void)
+{
+    return strtod(calc.input, NULL);
+}
+
+static uint8_t calc_apply(double a, char op, double b, double *out)
 {
     switch(op)
     {
-        case BTN_ID_CALC_ADD: return '+';
-        case BTN_ID_CALC_SUB: return '-';
-        case BTN_ID_CALC_MUL: return '*';
-        case BTN_ID_CALC_DIV: return '/';
-        default: return 0;
-    }
-}
-
-/*计算器 按下等号后*/
-void calculator_equal()
-{
-    calculatorstruct.tempvalue = calculatorstruct.currentvalue;//记录上一次运算最终结果，用于后面显示部分
-    if(calculatorstruct.operator)//已经有运算符的情况下再按下运算符
-    {
-        calculator_result();
-        calculatorstruct.char_equal = '=';
-    }
-}
-
-// calculated_value, calculated_currentvalue, calculated_tempvalue
-/*计算器显示*/
-void calculator_show(btn_type_calculator_t btn_type)
-{
-    if(btn_type != btn_type_calculator_equal)//非等号
-    {
-        snprintf(currenbuf, sizeof(currenbuf), "%.6g", calculatorstruct.currentvalue);
-        snprintf(buf, sizeof(buf), "%.6g", calculatorstruct.value);
-        
-        lv_label_set_text_fmt(ui_calc_expression, "%s%c%c", buf, calculatorstruct.char_operator, calculatorstruct.char_equal);
-
-        lv_label_set_text(ui_calc_value, currenbuf);
-    }
-    else//等号
-    {
-        snprintf(tempbuf, sizeof(tempbuf), "%.6g", calculatorstruct.tempvalue);
-        snprintf(currenbuf, sizeof(currenbuf), "%.6g", calculatorstruct.currentvalue);
-        snprintf(buf, sizeof(buf), "%.6g", calculatorstruct.value);
-        
-        lv_label_set_text_fmt(ui_calc_expression, "%s%c%s%c", tempbuf, calculatorstruct.char_operator,currenbuf, calculatorstruct.char_equal);
-        
-        lv_label_set_text(ui_calc_value, buf);//下面显示运算结果
-
-        calculatorstruct.char_equal = 0;//等号只在按下后显示一次，然后将等号清零
-    }
-    
-}
-
-/*计算器 总功能*/
-void calculator_function(btn_type_calculator_t btn_type, btn_id_t id)
-{
-    switch (btn_type)
-    {
-        case btn_type_calculator_num://数字
-            calculator_convert(id);
-            break;
-        
-        case btn_type_calculator_dot://小数点
-            if(!calculatorstruct.dot_flag){calculatorstruct.dec_scale = 1;}//第一次按下小数点，给小数倍率赋初值
-            calculatorstruct.dot_flag = 1;
-            break;
-
-        case btn_type_calculator_operator://运算符
-            calculator_operator(id);
-            calculatorstruct.char_operator = calculator_operator_char(id);
-            break;
-
-        case btn_type_calculator_clear://清零
-            memset(&calculatorstruct, 0, sizeof(calculatorstruct));
-            break;
-        
-        case btn_type_calculator_equal://等于
-            calculator_equal();
+        case '+': *out = a + b; break;
+        case '-': *out = a - b; break;
+        case '*': *out = a * b; break;
+        case '/':
+            if(b == 0.0)
+            {
+                calc.error = 1;
+                return 0;
+            }
+            *out = a / b;
             break;
 
         default:
+            *out = b;
             break;
     }
-    calculator_show(btn_type);
+
+    return 1;
+}
+
+static void calc_digit(uint8_t d)
+{
+    if(calc.error)
+    {
+        return;
+    }
+
+    if(calc.state == CALC_STATE_RESULT)
+    {
+        calc_clear_state();
+    }
+
+    if(calc_input_digits() >= CALC_INPUT_DIGITS_MAX)
+    {
+        return;
+    }
+
+    size_t len = strlen(calc.input);
+
+    if(len + 1 >= sizeof(calc.input))
+    {
+        return;
+    }
+
+    calc.input[len] = (char)('0' + d);
+    calc.input[len + 1] = '\0';
+
+    calc_append_expr_char((char)('0' + d));
+    calc_render();
+}
+
+static void calc_dot(void)
+{
+    if(calc.error)
+    {
+        return;
+    }
+
+    if(calc.state == CALC_STATE_RESULT)
+    {
+        calc_clear_state();
+    }
+
+    if(calc.has_dot)
+    {
+        return;
+    }
+
+    if(calc_input_digits() >= CALC_INPUT_DIGITS_MAX)
+    {
+        return;
+    }
+
+    if(calc.input[0] == '\0')
+    {
+        strcpy(calc.input, "0");
+        calc_append_expr_char('0');
+    }
+
+    size_t len = strlen(calc.input);
+
+    if(len + 1 >= sizeof(calc.input))
+    {
+        return;
+    }
+
+    calc.input[len] = '.';
+    calc.input[len + 1] = '\0';
+    calc.has_dot = 1;
+
+    calc_append_expr_char('.');
+    calc_render();
+}
+
+static void calc_operator(char op)
+{
+    if(calc.error)
+    {
+        return;
+    }
+
+    /* 等号后直接按运算符：用当前结果继续计算 */
+    if(calc.state == CALC_STATE_RESULT)
+    {
+        calc.acc = calc_get_input();
+        strcpy(calc.expr, calc.input);
+        calc.state = CALC_STATE_INPUT;
+    }
+
+    /* 连续按运算符：只替换运算符，不重复追加 */
+    if(calc.input[0] == '\0' && calc.op != 0)
+    {
+        calc.op = op;
+
+        size_t len = strlen(calc.expr);
+        if(len > 0)
+        {
+            calc.expr[len - 1] = op;
+        }
+
+        calc_render();
+        return;
+    }
+
+    /* 还没有输入数字，也没有前一个运算符 */
+    if(calc.input[0] == '\0' && calc.op == 0)
+    {
+        return;
+    }
+
+    double value = calc_get_input();
+
+    if(calc.op != 0)
+    {
+        double result;
+        if(!calc_apply(calc.acc, calc.op, value, &result))
+        {
+            calc_render();
+            return;
+        }
+        calc.acc = result;
+    }
+    else
+    {
+        calc.acc = value;
+    }
+
+    calc.op = op;
+    calc_append_expr_char(op);
+
+    calc.input[0] = '\0';
+    calc.has_dot = 0;
+    calc.state = CALC_STATE_INPUT;
+
+    calc_render();
+}
+
+static void calc_equal(void)
+{
+    if(calc.error || calc.state == CALC_STATE_RESULT)
+    {
+        return;
+    }
+
+    if(calc.input[0] == '\0' && calc.op == 0)
+    {
+        return;
+    }
+
+    double value = calc.input[0] ? calc_get_input() : calc.acc;
+
+    if(calc.op != 0)
+    {
+        double result;
+        if(!calc_apply(calc.acc, calc.op, value, &result))
+        {
+            calc_render();
+            return;
+        }
+        calc.acc = result;
+    }
+    else
+    {
+        calc.acc = value;
+    }
+
+    calc_append_expr_char('=');
+
+    char result_buf[32];
+    snprintf(result_buf, sizeof(result_buf), "%.9g", calc.acc);
+    calc_append_expr(result_buf);
+
+    snprintf(calc.input, sizeof(calc.input), "%.9g", calc.acc);
+    calc.has_dot = (strchr(calc.input, '.') != NULL);
+    calc.op = 0;
+    calc.state = CALC_STATE_RESULT;
+    calc_render();
+}
+
+static void calc_clear(void)
+{
+    calc_clear_state();
+    calc_render();
+}
+
+void calculator_init(void)
+{
+    calc_clear_state();
+    calc_render();
+}
+
+void calculator_key(btn_id_t id)
+{
+    if(id >= BTN_ID_CALC_0 && id <= BTN_ID_CALC_9)
+    {
+        calc_digit((uint8_t)(id - BTN_ID_CALC_0));
+    }
+    else if(id == BTN_ID_CALC_DOT)
+    {
+        calc_dot();
+    }
+    else if(id == BTN_ID_CALC_ADD)
+    {
+        calc_operator('+');
+    }
+    else if(id == BTN_ID_CALC_SUB)
+    {
+        calc_operator('-');
+    }
+    else if(id == BTN_ID_CALC_MUL)
+    {
+        calc_operator('*');
+    }
+    else if(id == BTN_ID_CALC_DIV)
+    {
+        calc_operator('/');
+    }
+    else if(id == BTN_ID_CALC_EQ)
+    {
+        calc_equal();
+    }
+    else if(id == BTN_ID_CALC_C)
+    {
+        calc_clear();
+    }
 }

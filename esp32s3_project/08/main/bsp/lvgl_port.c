@@ -43,10 +43,22 @@ void indev_read_cb_t(lv_indev_t * indev, lv_indev_data_t * data)
 
     if(tft_touch_struct.touch_num)//手指按下判断
     {
+        int32_t touch_y = (int32_t)tft_touch_struct.y_touch + CTP_TOUCH_Y_OFFSET;
+
+        /*限制在屏幕范围内*/
+        if(touch_y < 0)
+        {
+            touch_y = 0;
+        }
+        if(touch_y >= TFT_H)
+        {
+            touch_y = TFT_H - 1;
+        }
+
         data->state = LV_INDEV_STATE_PRESSED;
 
         data->point.x = tft_touch_struct.x_touch;
-        data->point.y = tft_touch_struct.y_touch;
+        data->point.y = touch_y;
     }
     else
     {

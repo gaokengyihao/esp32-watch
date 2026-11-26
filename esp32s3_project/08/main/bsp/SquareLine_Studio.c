@@ -162,7 +162,7 @@ static void btn_test_cb(lv_event_t *e)
                     break;
 
                 case btn_type_calculator:
-                    calculator_function(calculator_typejudge(id), id);
+                    calculator_key(id);
                     break;
                 
                 default:
@@ -200,4 +200,6 @@ void btn_init()
     lv_obj_add_event_cb(ui_calc_div,btn_test_cb,LV_EVENT_CLICKED,(void *)(uintptr_t)BTN_ID_CALC_DIV);
     lv_obj_add_event_cb(ui_calc_eq,btn_test_cb,LV_EVENT_CLICKED,(void *)(uintptr_t)BTN_ID_CALC_EQ);
     lv_obj_add_event_cb(ui_calc_C,btn_test_cb,LV_EVENT_CLICKED,(void *)(uintptr_t)BTN_ID_CALC_C);
+
+    calculator_init();
 }

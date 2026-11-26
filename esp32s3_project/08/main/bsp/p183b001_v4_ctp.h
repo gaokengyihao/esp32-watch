@@ -8,6 +8,9 @@ typedef struct{
     uint16_t x_touch, y_touch;
 }tft_touch_structtypedef;
 
+/*触摸 Y 坐标与显示 Y 坐标的偏差补偿*/
+#define CTP_TOUCH_Y_OFFSET   (-20)
+
 extern tft_touch_structtypedef tft_touch_struct;
 
 void p183b001_v4_ctp_gpio_init();
