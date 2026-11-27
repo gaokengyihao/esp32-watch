@@ -11,6 +11,7 @@
 
 #include "ui.h"
 #include "SquareLine_Studio.h"
+#include "ui_stopwatch.h"
 
 unsigned int number;
 
@@ -55,6 +56,9 @@ void lvgl_task(void *arg)
     {
         /*定期调用它来处理lv_timer*/
         lv_timer_handler();
+        
+        /*秒表功能轮询，需置标志位打开*/
+        sw_scan();
 
         vTaskDelay(pdMS_TO_TICKS(10));
     }

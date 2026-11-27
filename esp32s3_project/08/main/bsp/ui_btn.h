@@ -5,7 +5,9 @@ typedef enum{
     /*菜单1*/
     btn_type_menu1 = 1,
     /*计算器*/
-    btn_type_calculator = 2//计算器数字
+    btn_type_calculator = 2,
+    /*秒表*/
+    btn_type_stopwatch = 3
 }btn_type_t;//以模块区分按键
 
 typedef enum

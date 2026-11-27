@@ -7,6 +7,8 @@
 
 #include "ui.h"
 
+#include "ui_stopwatch.h"
+
 #include <stdio.h>
 
 extern lv_indev_t *input_indev;//输入设备指针
@@ -143,6 +145,7 @@ uint8_t btn_typejudge(uint8_t id)
 
     if(id >= BTN_ID_MENU1_CALENDAR && id <= BTN_ID_MENU1_CARDPACK){btn_type = btn_type_menu1;}
     if(id >= BTN_ID_CALC_0 && id <= BTN_ID_CALC_C){btn_type = btn_type_calculator;}
+    if(id >= BTN_ID_SW_START && id <= BTN_ID_SW_RESET){btn_type = btn_type_stopwatch;}
 
     return btn_type;
 }
@@ -154,22 +157,26 @@ static void btn_test_cb(lv_event_t *e)
     {
         btn_id_t id = (btn_id_t)(uintptr_t) lv_event_get_user_data(e);//获取当前按键
         uint8_t key_type = btn_typejudge(id);
+
+        
+        switch (key_type)
         {
-            switch (key_type)
-            {
-                case btn_type_menu1:
-                    menu1_function(id);
-                    break;
+            case btn_type_menu1:
+                menu1_function(id);
+                break;
 
-                case btn_type_calculator:
-                    calculator_key(id);
-                    break;
-                
-                default:
-                    break;
-            }
+            case btn_type_calculator:
+                calculator_key(id);
+                break;
+
+            case btn_type_stopwatch:
+                stopwatch_function(id);
+                break;
+            
+            default:
+                break;
         }
-
+        
     }
 }
 
@@ -202,4 +209,8 @@ void btn_init()
     lv_obj_add_event_cb(ui_calc_C,btn_test_cb,LV_EVENT_CLICKED,(void *)(uintptr_t)BTN_ID_CALC_C);
 
     calculator_init();
+
+    /*秒表*/
+    lv_obj_add_event_cb(ui_sw_start,btn_test_cb,LV_EVENT_CLICKED,(void *)(uintptr_t)BTN_ID_SW_START);
+    lv_obj_add_event_cb(ui_sw_reset,btn_test_cb,LV_EVENT_CLICKED,(void *)(uintptr_t)BTN_ID_SW_RESET);
 }
